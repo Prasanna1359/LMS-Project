@@ -1,0 +1,148 @@
+# Python specific
+*.py[cod]
+_pycache_/
+*.so
+*.egg
+*.egg-info/
+.eggs/
+*.pyo
+
+# Django specific
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+
+# Environment variables
+.env
+
+# Django static and media files
+/static/
+/media/
+
+# Local environment configurations
+local_settings.py
+.env
+
+# macOS specific
+.DS_Store
+
+# Virtual environment
+venv/
+env/
+
+# VS Code specific
+.vscode/
+
+# PyCharm specific
+.idea/
+
+# Byte-compiled / optimized / DLL files
+_pycache_/
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media
+staticfiles
+static/
+
+# Server dumps
+*.pid
+
+# Packaging
+*.egg
+*.egg-info
+dist
+build
+eggs
+*.manifest
+*.spec
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.cache
+
+# pyenv
+.python-version
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# Sphinx documentation
+docs/_build/
+*.rst
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# Pycharm
+.idea/
+
+# Windows
+Thumbs.db
+ehthumbs.db
+
+# VS Code
+.vscode/
+
+# Hidden by default
+!.gitignore

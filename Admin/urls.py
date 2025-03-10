@@ -11,7 +11,11 @@ urlpatterns=[
     path('retreiveCourses/',RetreiveCoursesDataView.as_view(),name='retreiveCourses'),
     path('VerifyEmail/',VerifyEmailView.as_view(),name='VerifyEmail'),
     path('verify_fp_otp/',verify_FP_otp.as_view(),name='verify_fp_otp'),
-    path('ResetPassword/',ResetPassword.as_view(),name='ResetPassword',)
+    path('ResetPassword/',ResetPassword.as_view(),name='ResetPassword'),
+    path('deleteCourse/<int:id>/',DeleteCourses.as_view(),name='deleteCourse'),
+    path('retreiveAdmins/',retreiveAdminsView.as_view(),name='retreiveAdmins'),
+    path('updateCourses/<int:id>/',updateCoursesView.as_view(),name='updateCourses'),
+    
 
 
 ]

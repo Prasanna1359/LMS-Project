@@ -199,4 +199,39 @@ class ResetPassword(APIView):
             user.save()
             return Response({"message":"successfully reseted"},status=200)
 
-       
+
+class DeleteCourses(APIView):
+
+    def delete(self,request,id):
+        print("deletingggg")
+        try:
+            course = CoursesData.objects.get(id=id)
+            course.delete()
+            return Response(status=204)
+        except CoursesData.DoesNotExist:
+            return Response(status=404)
+        except Exception as e:
+            return Response({"detail": str(e)}, status=400)
+        
+
+class retreiveAdminsView(APIView):
+    def get(self,request):
+        data=CustomUser.objects.filter(panel="admin")
+        serializer=AdminRegistrationSerializer(data,many=True)
+        print(serializer.data)
+        return Response(serializer.data,status=200)
+
+
+class updateCoursesView(APIView):
+    def put(self,request,id):
+        try:
+            course = CoursesData.objects.get(id=id)
+            serializer = CourseSerializer(course, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=200)
+            return Response(serializer.errors, status=400)
+        except CoursesData.DoesNotExist:
+            return Response(status=404)
+        except Exception as e:
+            return Response({"detail": str(e)},status=400)

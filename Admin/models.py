@@ -8,19 +8,15 @@ import random
 class CustomUser(AbstractUser):
     groups = models.ManyToManyField(Group, related_name="groups_tokens")
     user_permissions = models.ManyToManyField(Permission, related_name="permissions_tokens")
-     
-
     panel_choices=[
         ('admin',"admin"),
         ('student',"student")
     ]
-
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=150, unique=False,null=True)  
     password=models.CharField(max_length=50)
     panel=models.CharField(max_length=20,choices=panel_choices)
-
-
+    profile=models.ImageField(upload_to='uploads/',null=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username','panel'] 
 
@@ -46,7 +42,7 @@ class LoginOTPModel(models.Model):
 
 class CoursesData(models.Model):
     course_name=models.CharField(max_length=50,unique=True)
-    course_photo=models.FileField(upload_to='uploads/')
+    course_photo=models.ImageField(upload_to='uploads/')
     tutor_name=models.CharField(max_length=50)
     tutor_email=models.EmailField()
     tutor_contact=models.CharField(max_length=10)
@@ -55,3 +51,22 @@ class CoursesData(models.Model):
         return self.course_name
 
 
+class TutorData(models.Model):
+
+    tutor_name=models.CharField(max_length=100)
+    tutor_email=models.EmailField()
+    tutor_contact=models.CharField(max_length=10)
+
+    def _str_(self):
+        return self.tutor_email
+    
+
+
+# class StudentData(models.Model):
+
+   
+#     user=models.ForeignKey(CustomUser,on_delete=models.CASCADE)
+#     courses=models.ManyToManyField()
+#     joined_date=models.DateField()
+#     end_date=models.DateField()
+   

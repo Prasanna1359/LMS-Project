@@ -24,10 +24,11 @@ class AdminRegistrationSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, min_length=8)
     confirm_password = serializers.CharField(write_only=True, required=True, min_length=8)
     panel=serializers.ChoiceField(choices=panel_choices)
+    profile=serializers.ImageField(required=False)
 
     class Meta:
         model = CustomUser
-        fields = ('username', 'email', 'password', 'confirm_password','panel')
+        fields = ('username', 'email', 'password', 'confirm_password','panel','profile')
 
     def validate(self, data):
         if data['password'] != data['confirm_password']:
@@ -100,8 +101,6 @@ class LoginOTPSerializer(serializers.ModelSerializer):
     user=serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all())
     otp=serializers.CharField(max_length=6)
 
-
-
 class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model=CoursesData
@@ -109,3 +108,10 @@ class CourseSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data): 
         return CoursesData.objects.create(**validated_data)
+    
+
+class TutorDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=TutorData
+        fields='__all__'   
+

@@ -5,7 +5,7 @@ from .models import *
 
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
-    list_display = ('email', 'username','panel')
+    list_display = ('email', 'username','panel','profile')
     list_filter = ('is_staff', 'is_active')
     fieldsets = (
         (None, {'fields': ('email', 'username', 'password')}),
@@ -34,3 +34,10 @@ class Courses(admin.ModelAdmin):
     model=CoursesData
     list_display=['id','course_name','course_photo','tutor_name','tutor_email','tutor_contact']
 admin.site.register(CoursesData,Courses)
+
+
+class Tutors(admin.ModelAdmin):
+    model=TutorData
+    list_display=['id','tutor_name','tutor_email','tutor_contact']
+
+admin.site.register(TutorData,Tutors)

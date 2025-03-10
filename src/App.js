@@ -19,7 +19,7 @@ function App() {
       
       
 
-       {/* <BrowserRouter>
+       {/* /* <BrowserRouter>
        <Routes>
 
       <Route path="/" element={<PageLayout />}>
@@ -28,7 +28,7 @@ function App() {
         <Route path="settings" element={<AddAdminPage />} />
       </Route>
     </Routes>
-       </BrowserRouter> */}
+       </BrowserRouter> */ }
     </div>
   );
 }

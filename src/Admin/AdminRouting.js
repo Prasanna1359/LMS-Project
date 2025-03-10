@@ -8,6 +8,7 @@ import Courses from "./pages/courses";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import PageLayout from "./pages/PageLayout";
+import ViewCourse from "./pages/ViewCourse";
 
 
 function AdminRouting () {
@@ -15,18 +16,22 @@ function AdminRouting () {
     <div>
         
            <Routes>
-               <Route path="/" element={<Courses/>}></Route>
+               <Route path="/" element={<AdminLogin/>}></Route>
                <Route path="AdminLogin/" element={<AdminLogin/>}></Route>
                <Route path="verify_otp/" element={<VerifyOTP/>}></Route>
-               {/* <Route path="admin_home/" element={<AdminHome/>}></Route> */}
-               <Route path="AddAdmin/" element={<AddAdminPage/>}></Route>
-               {/* <Route path="courses/" element={<Courses/>}></Route> */}
                <Route path="Forgot_password/" element={<ForgotPassword/>}></Route>
                <Route path="reset-password/" element={<ResetPassword/>}></Route>
-               <Route path="admin_home/" element={<PageLayout />}></Route>
-               <Route path='courses/' element={<Courses />} />
-               <Route path="users/" element={< VerifyOTP/>} />
-               <Route path="settings/" element={<AddAdminPage />}></Route>
+              
+
+               <Route path="admin_home/" element={<PageLayout />}>
+                    <Route path="AddAdmin/" element={<AddAdminPage/>}></Route>
+                    <Route path="courses/" element={<Courses />} ></Route>
+                    <Route path="users/" element={< VerifyOTP/>} ></Route>
+                    <Route path="settings/" element={<AddAdminPage />}></Route>
+                    <Route path="view-course/" element={<ViewCourse/>}></Route>
+                   
+
+               </Route>
 
            </Routes>
         

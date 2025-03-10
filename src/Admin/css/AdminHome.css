@@ -26,6 +26,7 @@
 
 .navigator button{
     width: 80%;
+    border-radius: 20px;
     /* background: #f8f2f8 */
     
    
@@ -54,8 +55,14 @@
     margin-left: 5%;
 }
 
+.my-app h2{
+    color: #ff416f;
+    text-align: center;
+    padding: 2%;
+}
+
 .profile {
-    text-align: right;
-    color: rgb(178, 33, 115);
+    text-align: end;
+    
    
 }

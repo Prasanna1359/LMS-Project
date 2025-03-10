@@ -2,6 +2,9 @@
 import { useState, useEffect, useRef } from "react";
 import { Container, Form, Button, Row, Col, Toast, ToastContainer } from "react-bootstrap";
 import { useNavigate, useLocation } from "react-router-dom";
+import "../css/LoginCSS.css"
+
+
 
 const VerifyOTP = () => {
     const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -133,11 +136,47 @@ const VerifyOTP = () => {
     };
 
     return (
-        <Container className="d-flex justify-content-center align-items-center vh-100" style={{width:'100%'}}>
-            <Row>
-                <Col className="text-center box" >
-                    <h2 className="mb-4">Enter OTP</h2>
-                    <Form onSubmit={handleSubmit}>
+        // <Container className="d-flex justify-content-center align-items-center vh-100" style={{width:'100%'}}>
+        //     <Row>
+        //         <Col className="text-center box" >
+        //             <h2 className="mb-4">Enter OTP</h2>
+        //             <Form onSubmit={handleSubmit}>
+        //                 <div className="d-flex justify-content-center mb-3">
+        //                     {otp.map((digit, index) => (
+        //                         <Form.Control
+        //                             key={index}
+        //                             ref={(el) => (inputsRef.current[index] = el)}
+        //                             type="text"
+        //                             maxLength="1"
+        //                             value={digit}
+        //                             onChange={(e) => handleChange(index, e.target.value)}
+        //                             onPaste={handlePaste}
+        //                             className="text-center otp-box"
+        //                             style={{ width:"10px", height: "5px", fontSize: "15px",margin:'1%'  }}
+        //                         />
+        //                     ))}
+        //                 </div>
+        //                 <Button type="submit" >
+        //                     Verify OTP
+        //                 </Button>
+        //             </Form>
+        //             <div className="mt-3">
+        //                 {timeLeft > 0 ? (
+        //                     <p className="text-muted">Resend OTP in {timeLeft}s</p>
+        //                 ) : (
+        //                     <Button type="button" onClick={handleResend} disabled={!canResend} className="btn btn-secondary">
+        //                         Resend OTP
+        //                     </Button>
+        //                 )}
+        //             </div>
+
+
+                    <div className="login-container">
+
+                        <div className="login-box">
+                            <h2 >Enter OTP</h2>
+
+                            <Form onSubmit={handleSubmit}>
                         <div className="d-flex justify-content-center mb-3">
                             {otp.map((digit, index) => (
                                 <Form.Control
@@ -149,35 +188,46 @@ const VerifyOTP = () => {
                                     onChange={(e) => handleChange(index, e.target.value)}
                                     onPaste={handlePaste}
                                     className="text-center otp-box"
-                                    style={{ width:"10px", height: "5px", fontSize: "15px",margin:'1%'  }}
+                                    style={{ width:"40px", height: "40px", fontSize: "15px",margin:'1%'  }}
                                 />
                             ))}
                         </div>
-                        <Button variant="primary" type="submit" >
+                        <Button type="submit" className="button" style={{background:'#ff416c',margin:'1%'}}>
                             Verify OTP
                         </Button>
                     </Form>
-                    <div className="mt-3">
-                        {timeLeft > 0 ? (
-                            <p className="text-muted">Resend OTP in {timeLeft}s</p>
-                        ) : (
-                            <Button type="button" onClick={handleResend} disabled={!canResend} className="btn btn-secondary">
-                                Resend OTP
-                            </Button>
-                        )}
+
+                    <div className="mt-4">
+                         {timeLeft > 0 ? (
+                             <p className="text-muted">Resend OTP in {timeLeft}s</p>
+                         ) : (
+                             <button type="button" onClick={handleResend} disabled={!canResend} className="login-btn">
+                                 Resend OTP
+                             </button>
+                         )}
+                     </div>
+                        </div>
+
+
+                     <ToastContainer position="top-end" className="p-3">
+                 <Toast onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide bg={toastVariant}>
+                     <Toast.Body className="text-white">{toastMessage}</Toast.Body>
+                 </Toast>
+            </ToastContainer>
+
                     </div>
                
            
 
             
-            <ToastContainer position="top-end" className="p-3">
-                <Toast onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide bg={toastVariant}>
-                    <Toast.Body className="text-white">{toastMessage}</Toast.Body>
-                </Toast>
-            </ToastContainer>
-            </Col>
-            </Row>
-        </Container>
+        //     <ToastContainer position="top-end" className="p-3">
+        //         <Toast onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide bg={toastVariant}>
+        //             <Toast.Body className="text-white">{toastMessage}</Toast.Body>
+        //         </Toast>
+        //     </ToastContainer>
+        //     </Col>
+        //     </Row>
+        // </Container>
     );
 };
 

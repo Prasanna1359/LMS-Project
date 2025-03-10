@@ -1,12 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function Courses() {
-    const [studentData,setStudentData]=useState({
-        "username":"",
-        
+function Students() {
+    const [StudentDetails,setStudentDetails]=useState("")
+    const [error,setError]=useState("")
 
-    })
+
+     useEffect(() => {
+            fetchStudentData();
+        }, []);
+    
+        const fetchStudentData = async () => {
+            try {
+                const response = await fetch("http://127.0.0.1:8000/AdminUrls/retreiveStudents/", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                });
+    
+                const data = await response.json();
+                setStudentDetails(data);
+                setError(response);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+    
 
     return (
         <div>
@@ -40,4 +60,4 @@ function Courses() {
     );
 }
 
-export default Courses;
+export default Students;

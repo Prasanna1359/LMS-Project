@@ -2,14 +2,18 @@
 .modal-overlay {
     position: fixed;
     top: 0;
-    left: 0;
+    left: 30%;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
+    width: 50%;
+  
     display: flex;
     justify-content: center;
     align-items: center;
+    text-align: center;
     z-index: 1000;
+
+   background: white;
   }
 
   .modal-content {
@@ -17,17 +21,28 @@
     padding: 20px;
     border-radius: 8px;
     width: 400px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); */
+    
+  }
+
+  .modal-content h2{
+    color: #ff416c;
   }
   
   input {
     margin: 10px 0;
     padding: 8px;
-    width: 100%;
+    width: 90%;
     box-sizing: border-box;
+
+  }
+
+  .inputField *{
+    margin-top: 10px;
+    border-radius: 10px;
   }
   
-  button {
+  .inputField button {
     padding: 8px 16px;
     margin: 10px 10px 0 0;
     background-color: #ff416c;
@@ -86,3 +101,43 @@
     cursor: pointer;
     padding-right: 2%;
   }
+
+
+  .modal-content button{
+    width: 30%;
+  }
+
+  .course-box h4{
+    color: #ff416c;
+  }
+
+
+
+  .modal-overlay1 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5); 
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    z-index: 1050;
+}
+
+
+.modal-content1 {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
+    text-align: center; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+}
+
+.modal-btns button{
+  margin: 1%;
+  border-radius: 5px;
+
+}

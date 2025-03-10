@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'react-bootstrap';
-import '../css/coursess.css';
+
 import { FaEye ,FaPen,FaTrash } from 'react-icons/fa';
+import axios from 'axios';
+import "../css/coursess.css";
+
 function Courses() {
     const [courseData, setCourseData] = useState({
         course_name: "",
@@ -15,16 +18,31 @@ function Courses() {
     const navigate = useNavigate();
     const [token, setToken] = useState("");
     const [error, setError] = useState("");
-
+    const [deleteId,setDeleteId]=useState(0)
+    const [btn,setBtn]=useState("Add Course")
     const [showModal,setShowModal]=useState(false)
     const closeModal = () => {
         setShowModal(false)
     }
     const [deleteModal,setdeleteModal]=useState(false)
+    // const [data,setData]=useState([])
+
 
     const closeDeleteModal = () => {
         setdeleteModal(false)
     }
+
+    const editCourse = (data) => {
+      setBtn("Save")
+      setCourseData(data)
+      setShowModal(true)
+    }
+
+    const viewCourse = (data) => {
+      console.log(data)
+      navigate('../view-course',{state:{'course_data':data}})
+    }
+
     useEffect(() => {
         fetchCourseData();
     }, []);
@@ -62,6 +80,10 @@ function Courses() {
         formData.append('tutor_contact', courseData.tutor_contact);
 
         try {
+
+          if(btn == "Add Course"){
+
+          
             const response = await fetch("http://127.0.0.1:8000/AdminUrls/AddCourses/", {
                 method: "POST",
                 body: formData, // Send the FormData object (this includes file data)
@@ -73,13 +95,46 @@ function Courses() {
 
             // Handle success (e.g., reset form or show success message)
             console.log("Course added successfully!");
+            setShowModal(false)
+          }
+          if(btn == "Save"){
+
+            const response = await fetch(`http://127.0.0.1:8000/AdminUrls/updateCourses/${courseData.id}/`, {
+              method: "PUT",
+              body: formData, 
+          });
+
+          if (!response.ok) {
+              throw new Error("Failed to submit form");
+          }
+
+          console.log("Course saved successfully!");
+          setShowModal(false)
+          }
         } catch (error) {
             console.log("Error:", error);
         }
     };
 
+    const delCou = (id) => {
+      setdeleteModal(true)
+      setDeleteId(id)
+    }
+
+    const deletecourse = async(e) => {
+      console.log("deltinggg")
+      try{
+        const response=await axios.delete(`http://127.0.0.1:8000/AdminUrls/deleteCourse/${deleteId}/`)
+        console.log(response.data)
+        setdeleteModal(false)
+
+      }catch(error){
+        console.log(error)
+      }
+    }
     return (
-        <div>
+        <div className='course-box'>
+             <h4><u>COURSES</u></h4>
             <table className="table table-hover">
                 <thead>
                     <tr>
@@ -96,26 +151,29 @@ function Courses() {
                             <td>{index +1}</td>
                             <td>{data.course_name}</td>
                             <td>{data.tutor_name}</td>
-                            <td>{data.course_photo}</td>
+                            <td>
+                              <img src={data.course_photo} alt="course_photo"/>
+                            </td>
                             <td>
                                 
-                                <span className='action' ><FaEye/></span>
-                                <span className='action'><FaPen/></span>
-                                <span className='action' onClick={() => setdeleteModal(true)}><FaTrash/></span>    
+                                <span className='action' onClick={() => viewCourse(data)}><FaEye/></span>
+                                <span className='action' onClick={() => editCourse(data)}><FaPen/></span>
+                                <span className='action' onClick={() => delCou(data.id)}><FaTrash/></span>    
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
 
-            <button onClick={() => setShowModal(true)}>ADD COURSE</button>
+            <button onClick={() => setShowModal(true)} className='login-btn'>ADD COURSE</button>
 
   
 {showModal && (
         <div className="modal-overlay">
           <div className="modal-content">
+            <h2>Enter Course Details</h2>
             <form onSubmit={submitHandler} encType="multipart/form-data">
-              <div>
+              <div className='inputField'>
                 <input
                   type="text"
                   name="course_name"
@@ -125,7 +183,7 @@ function Courses() {
                   onChange={changeHandler}
                 />
               </div>
-              <div>
+              <div className='inputField'>
                 <input
                   type="file"
                   accept="image/*"
@@ -136,7 +194,7 @@ function Courses() {
                   }
                 />
               </div>
-              <div>
+              <div className='inputField'>
                 <input
                   type="text"
                   name="tutor_name"
@@ -146,7 +204,7 @@ function Courses() {
                   onChange={changeHandler}
                 />
               </div>
-              <div>
+              <div className='inputField'>
                 <input
                   type="email"
                   name="tutor_email"
@@ -156,7 +214,7 @@ function Courses() {
                   onChange={changeHandler}
                 />
               </div>
-              <div>
+              <div className='inputField'>
                 <input
                   type="text"
                   name="tutor_contact"
@@ -166,8 +224,8 @@ function Courses() {
                   onChange={changeHandler}
                 />
               </div>
-              <div>
-                <button type="submit">ADD</button>
+              <div className='inputField'>
+                <button type="submit" value={btn}>{btn}</button>
                 <button type="button" onClick={closeModal}>CANCEL</button>
               </div>
             </form>
@@ -176,12 +234,13 @@ function Courses() {
       )}
 
 {deleteModal && (
-        <div className="modal-overlay">
-          <div className="modal-content">
+        <div className='modal-overlay1' >
+          <div className="modal-content1">
               <p>do you to delete</p>
-              <button  onClick={deletecourse}>YES</button>
-              
-              <button  onClick={closeDeleteModal}>CANCEL</button>
+              <div className='d-flex modal-btns'>
+              <button  onClick={() => deletecourse()}>YES</button>
+              <button  onClick={closeDeleteModal} style={{background:'red'}}>CANCEL</button>
+              </div>
           </div>
         </div>
       )}

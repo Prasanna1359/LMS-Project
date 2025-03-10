@@ -2,10 +2,11 @@
 import { Outlet } from 'react-router-dom';
 import TopBar from './TopBar';
 import SideBar from './SideBar';
+import '../css/pageLayout.css';
 
 const PageLayout = () => {
   return (
-    <div>
+    <div className='topbar'>
       <TopBar />
       <div className="container-fluid">
         <div className="row">

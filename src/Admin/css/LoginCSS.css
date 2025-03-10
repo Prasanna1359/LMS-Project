@@ -36,7 +36,7 @@
   
   .icon {
     position: absolute;
-    left: 20px;
+    left: 35px;
     top: 50%;
     transform: translateY(-50%);
     color: #ff416c;
@@ -75,4 +75,17 @@
     text-align: center;
     width: 400px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+ }
+
+ Container{
+  width: 100%;
+ }
+
+ .button{
+ 
+  width: 30%;
+ }
+
+ .login-box h2{
+  color:#ff416c;
  }

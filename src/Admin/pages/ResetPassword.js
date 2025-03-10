@@ -3,6 +3,7 @@ import axios from 'axios'
 import React, { useState } from 'react'
 import { useLocation,useNavigate } from 'react-router-dom'
 import { FaLock } from 'react-icons/fa'
+import '../css/LoginCSS.css';
 
 function ResetPassword  ()  {
     const [password,setPassword]=useState("")
@@ -34,14 +35,14 @@ function ResetPassword  ()  {
         }
     }
   return (
-    <div className='container'>
+    <div className='login-container'>
 
-        <div className='box'>
+        <div className='login-box'>
             <form onSubmit={submitHandler}>
                 <h2>Set New Password</h2>
                 <div className='input-box'><FaLock className='icon'/><input type="password" name='password' value={password} placeholder='Password' onChange={(e) => setPassword(e.target.value)} required/></div>
                 <div className='input-box'><FaLock className='icon'/><input type="password" name='confirm_password' value={confirm_password} placeholder='Confirm Password' onChange={(e) => setConfirmPassword(e.target.value)} required/></div>
-                <div><button type='submit'>RESET PASSWORD</button></div>
+                <div><button type='submit' className='login-btn' style={{width:'40%'}}>RESET PASSWORD</button></div>
 
                 <div><p style={{color:'red'}}>{msg}</p></div>
 

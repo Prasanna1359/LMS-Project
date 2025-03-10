@@ -2,6 +2,7 @@ import axios from 'axios'
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { FaEnvelope } from 'react-icons/fa'
+import '../css/LoginCSS.css';
 
 function ForgotPassword  () {
 
@@ -32,14 +33,14 @@ function ForgotPassword  () {
     }
 
   return (
-    <div className='container'>
+    <div className='login-container'>
 
-      <div className='box'>
+      <div className='login-box'>
 
         <form onSubmit={submitHandler}>
           <h2>Enter Email</h2>
             <div className='input-box'><FaEnvelope className="icon" /><input type="email" name='email' value={email} placeholder='Email' required onChange={(e) => setEmail(e.target.value)}/></div>
-            <div><button type='submit'>GET OTP</button></div>
+            <div><button type='submit' className='login-btn' >GET OTP</button></div>
         </form>
         </div>
     </div>

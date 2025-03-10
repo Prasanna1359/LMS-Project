@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
+    'Admin',
+    'Student',
     
 ]
 
@@ -54,7 +56,7 @@ MIDDLEWARE = [
 ]
 
 
-
+AUTH_USER_MODEL='Admin.CustomUser'
 
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -164,19 +166,26 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 
-import os
-from dotenv import load_dotenv
+# import os
+# from dotenv import load_dotenv
 
-load_dotenv()
+# load_dotenv()
+
+# EMAIL_BACKEND = "emailsetup.email.EmailBackend"  # Custom backend
+# EMAIL_HOST = os.getenv("EMAIL_HOST")
+# EMAIL_PORT = int(os.getenv("EMAIL_PORT", 587))
+# EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS") == "True"
+# EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+# EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 EMAIL_BACKEND = "emailsetup.email.EmailBackend"  # Custom backend
-EMAIL_HOST = os.getenv("EMAIL_HOST")
-EMAIL_PORT = int(os.getenv("EMAIL_PORT", 587))
-EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS") == "True"
-EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+EMAIL_HOST = "smtp.gmail.com"  # SMTP server
+EMAIL_PORT = 587  # TLS port
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER='prasannavinukonda16@gmail.com'
+EMAIL_HOST_PASSWORD='gjjs yqle neth awzb' # Use App Password, not Gmail password
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-
 
 
 MEDIA_URL = '/media/'

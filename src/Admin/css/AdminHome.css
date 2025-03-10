@@ -1,0 +1,61 @@
+.asidebar{
+    background:#F8F2DE ;
+    height: 100vh;
+    width: 200px;
+   
+   position: fixed;
+   top: 60px;
+  left: 0;
+   z-index: 100;
+   /* overflow-y: auto; */
+}
+
+.logo{
+    height: 35%;
+}
+
+.buttons{
+    height: 65%;
+    text-align: center;
+}
+
+.navigator{
+    
+    margin: 5%;
+}
+
+.navigator button{
+    width: 80%;
+    /* background: #f8f2f8 */
+    
+   
+}
+.navigator button a {
+    text-decoration: none;
+    color: white;
+    font-size: 15px;
+}
+.navigator button a:hover{
+    text-decoration: none;
+    color: white;
+    font-size: 15px;   
+}
+
+.nav-bar{
+    height: 60px;
+    background-color: #F8F2DE;
+    
+    text-decoration: none;
+    display: flex;
+    
+}
+.my-app{
+    text-align: center;
+    margin-left: 5%;
+}
+
+.profile {
+    text-align: right;
+    color: rgb(178, 33, 115);
+   
+}

@@ -1,23 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+// import logo from './logo.svg';
+// import './App.css';
+import { BrowserRouter ,Routes,Route} from 'react-router-dom';
+
+import AdminRouting from './Admin/AdminRouting.js';
+// import AdminHome from './Admin/pages/AdminHome.jsx';
+import AddAdminPage from './Admin/pages/AddAdminPage.js';
+import VerifyOTP from './Admin/pages/VerifyOTP.js';
+import Courses from './Admin/pages/courses.js';
+import PageLayout from './Admin/pages/PageLayout.js';
+
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <BrowserRouter>
+         <AdminRouting/>
+      </BrowserRouter>
+      
+      
+
+       {/* <BrowserRouter>
+       <Routes>
+
+      <Route path="/" element={<PageLayout />}>
+        <Route path='courses' element={<Courses />} />
+        <Route path="users" element={< VerifyOTP/>} />
+        <Route path="settings" element={<AddAdminPage />} />
+      </Route>
+    </Routes>
+       </BrowserRouter> */}
     </div>
   );
 }

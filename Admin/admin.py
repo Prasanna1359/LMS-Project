@@ -41,3 +41,10 @@ class Tutors(admin.ModelAdmin):
     list_display=['id','tutor_name','tutor_email','tutor_contact']
 
 admin.site.register(TutorData,Tutors)
+
+class videos(admin.ModelAdmin):
+    model=Videos
+    list_display=['id','course','video','uploaded_at','description']
+admin.site.register(Videos,videos)
+
+

@@ -62,11 +62,17 @@ class TutorData(models.Model):
     
 
 
-# class StudentData(models.Model):
+class StudentData(models.Model):
 
+    user=models.ForeignKey(CustomUser,on_delete=models.CASCADE)
+    courses=models.ManyToManyField(CoursesData)
+    joined_date=models.DateField()
+    end_date=models.DateField()
    
-#     user=models.ForeignKey(CustomUser,on_delete=models.CASCADE)
-#     courses=models.ManyToManyField()
-#     joined_date=models.DateField()
-#     end_date=models.DateField()
-   
+
+class Videos(models.Model):
+
+    course=models.ForeignKey(CoursesData,on_delete=models.CASCADE)
+    video=models.FileField(upload_to='videos/',null=True)
+    uploaded_at=models.DateField(auto_now_add=True)
+    description=models.CharField(max_length=100)

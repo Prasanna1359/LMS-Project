@@ -115,3 +115,14 @@ class TutorDataSerializer(serializers.ModelSerializer):
         model=TutorData
         fields='__all__'   
 
+class VideosSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Videos
+        fields='__all__'
+
+
+
+class StudentDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = StudentData
+        fields = ['id','user', 'courses', 'joined_date', 'end_date']

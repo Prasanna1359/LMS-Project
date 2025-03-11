@@ -116,8 +116,12 @@ class AddCourseView(APIView):
 
     def post(self,request):
         serializer = CourseSerializer(data=request.data)
+    
         if serializer.is_valid():
             serializer.save()
+            Course.objects.create(course_name=request.data.get('course_name'))
+
+
             print("savinggggg")
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -235,3 +239,50 @@ class updateCoursesView(APIView):
             return Response(status=404)
         except Exception as e:
             return Response({"detail": str(e)},status=400)
+        
+
+ 
+class CourseListAPIView(APIView):
+    def get(self, request):
+        courses = CoursesData.objects.all()
+        serializer = CourseSerializer(courses, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class StudentDataCreateAPIView(APIView):
+    def post(self, request):
+        serializer = StudentDataSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+
+class VideoUploadView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
+
+    def post(self, request):
+        serializer = VideosSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class fetchVideosView(APIView):
+    def get(self,request,id):
+        videos = Videos.objects.filter(course=id)
+        serializer = VideosSerializer(videos, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class DeleteVideoView(APIView):
+    def delete(self,request,id):
+        try:
+            video = Videos.objects.get(id=id)
+            video.delete()
+            return Response(status=204)
+        except Videos.DoesNotExist:
+            return Response(status=404)
+        except Exception as e:
+            return Response({"detail": str(e)}, status=400)

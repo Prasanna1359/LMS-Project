@@ -15,6 +15,11 @@ urlpatterns=[
     path('deleteCourse/<int:id>/',DeleteCourses.as_view(),name='deleteCourse'),
     path('retreiveAdmins/',retreiveAdminsView.as_view(),name='retreiveAdmins'),
     path('updateCourses/<int:id>/',updateCoursesView.as_view(),name='updateCourses'),
+    path('courses/', CourseListAPIView.as_view(), name='course-list'),
+    path('student-data/', StudentDataCreateAPIView.as_view(), name='student-data'),
+    path('fetchVideos/<int:id>/',fetchVideosView.as_view(),name='fetchVideos'),
+    path('upload_video/',VideoUploadView.as_view(),name='upload_video'),
+    path('DeleteVideo/<int:id>/',DeleteVideoView.as_view(),name='DeleteVideo'),
     
 
 

@@ -9,6 +9,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import PageLayout from "./pages/PageLayout";
 import ViewCourse from "./pages/ViewCourse";
+import Students from "./pages/Students";
 
 
 function AdminRouting () {
@@ -26,9 +27,11 @@ function AdminRouting () {
                <Route path="admin_home/" element={<PageLayout />}>
                     <Route path="AddAdmin/" element={<AddAdminPage/>}></Route>
                     <Route path="courses/" element={<Courses />} ></Route>
-                    <Route path="users/" element={< VerifyOTP/>} ></Route>
-                    <Route path="settings/" element={<AddAdminPage />}></Route>
+                    
+                    <Route path="addAdmin/" element={<AddAdminPage />}></Route>
                     <Route path="view-course/" element={<ViewCourse/>}></Route>
+                    <Route path="students/" element={<Students/>}></Route>
+
                    
 
                </Route>

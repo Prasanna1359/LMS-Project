@@ -23,6 +23,11 @@ function Courses() {
     const [showModal,setShowModal]=useState(false)
     const closeModal = () => {
         setShowModal(false)
+        setCourseData({course_name: "",
+          course_photo: "",
+          tutor_name: "",
+          tutor_email: "",
+          tutor_contact: "",})
     }
     const [deleteModal,setdeleteModal]=useState(false)
     // const [data,setData]=useState([])
@@ -95,6 +100,11 @@ function Courses() {
 
             // Handle success (e.g., reset form or show success message)
             console.log("Course added successfully!");
+            setCourseData({course_name: "",
+              course_photo: "",
+              tutor_name: "",
+              tutor_email: "",
+              tutor_contact: "",})
             setShowModal(false)
           }
           if(btn == "Save"){
@@ -107,7 +117,11 @@ function Courses() {
           if (!response.ok) {
               throw new Error("Failed to submit form");
           }
-
+          setCourseData({course_name: "",
+            course_photo: "",
+            tutor_name: "",
+            tutor_email: "",
+            tutor_contact: "",})
           console.log("Course saved successfully!");
           setShowModal(false)
           }
@@ -134,7 +148,16 @@ function Courses() {
     }
     return (
         <div className='course-box'>
-             <h4><u>COURSES</u></h4>
+             
+             <div className='d-flex justify-content-between align-items-center'>
+
+              <div><h4><u>COURSES:</u></h4></div>
+              <div></div>
+              <div><button onClick={() => setShowModal(true)} className='login-btn' style={{width:'110%'}}>ADD COURSE</button></div>
+
+                
+                
+             </div>
             <table className="table table-hover">
                 <thead>
                     <tr>
@@ -165,7 +188,7 @@ function Courses() {
                 </tbody>
             </table>
 
-            <button onClick={() => setShowModal(true)} className='login-btn'>ADD COURSE</button>
+            
 
   
 {showModal && (

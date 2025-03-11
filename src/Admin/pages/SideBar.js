@@ -17,21 +17,21 @@ const SideBar = () => {
               <span data-feather="home"></span>
               Courses
             </Link></button></div>
-           <div className='navigator'> <button><Link className="nav-link" to="./users">
-              <span data-feather="users"></span>
+           <div className='navigator'> <button><Link className="nav-link" to="./students">
+              <span data-feather="students"></span>
               Add Students
             </Link></button></div>
            <div className='navigator'>  <button> <Link className="nav-link" to="./settings">
               <span data-feather="settings"></span>
               Enrolled Students
             </Link></button></div>
-           <div className='navigator'>  <button><Link className="nav-link" to="./settings">
-              <span data-feather="settings"></span>
+           <div className='navigator'>  <button><Link className="nav-link" to="./addAdmin">
+              <span data-feather="addAdmin"></span>
               Add Admin
             </Link></button></div>
 
-            <div className='navigator'>  <button><Link className="nav-link" to="./AddAdmin">
-              <span data-feather="settings"></span>
+            <div className='navigator'>  <button><Link className="nav-link" to="/">
+              <span data-feather="/"></span>
               Logout
             </Link></button></div>
  

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import '../css/LoginCSS.css';
+// import '../css/LoginCSS.css';
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { FaLock ,FaEnvelope} from "react-icons/fa"; 
-// import { loginApi } from "../AdminApi";
 
-const AdminLogin = () => {
+
+const StudentLogin = () => {
         const [loginData,setLoginData]=useState({
             'email':"",
             'password':"",
@@ -49,7 +49,7 @@ const AdminLogin = () => {
   return (
     <div className="login-container">
       <div className="login-box">
-        <h2>ADMIN LOGIN</h2>
+        <h2>STUDENT LOGIN</h2>
         <form onSubmit={handleSubmit}>
           <div className="input-box">
             <FaEnvelope className="icon" />
@@ -88,8 +88,8 @@ const AdminLogin = () => {
            </p>
         </form>
         <p>
-          Are you a Student?<br />
-          <a href="/StudentLogin" >Login</a>
+          Are you a Admin?<br />
+          <a href="/AdminLogin" >Login</a>
         </p>
       </div>
 
@@ -98,4 +98,4 @@ const AdminLogin = () => {
   );
 };
 
-export default AdminLogin;
+export default StudentLogin;

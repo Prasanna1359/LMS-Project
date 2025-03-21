@@ -1,18 +1,24 @@
+
 import { Link } from 'react-router-dom';
 import 'react-bootstrap';
-import '../css/AdminHome.css'
+import '../css/AdminHome.css';
 import React from 'react';
-
-const TopBar = () => {
+import { FaUserCircle } from 'react-icons/fa';
+const TopBar = ({ user }) => {
   return (
-    <nav className="navbar navbar-expand-md navbar-dark fixed-top w-100 nav-bar ">
-      <div  className='d-flex'>
-
-        <div className='my-app'><h2>LMS</h2></div>
-
-        
-        
-          
+    <nav className="navbar navbar-expand-md fixed-top w-100 nav-bar">
+      <div className="d-flex w-100 justify-content-between">
+        <div className="my-app">
+          <h2>LMS</h2>
+        </div>
+        <div className="me-5 d-flex profile">
+          <div className="me-2">
+            <FaUserCircle />
+          </div>
+          <div>
+            <h5 className="">Welcome {user || "Guest"}</h5>
+          </div>
+        </div>
       </div>
     </nav>
   );

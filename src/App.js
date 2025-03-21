@@ -8,6 +8,7 @@ import AddAdminPage from './Admin/pages/AddAdminPage.js';
 import VerifyOTP from './Admin/pages/VerifyOTP.js';
 import Courses from './Admin/pages/courses.js';
 import PageLayout from './Admin/pages/PageLayout.js';
+import StudentRouting from './Student/StudentRouting.js';
 
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
     <div>
       <BrowserRouter>
          <AdminRouting/>
+         <StudentRouting/>
       </BrowserRouter>
       
       

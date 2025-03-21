@@ -10,7 +10,9 @@ import ResetPassword from "./pages/ResetPassword";
 import PageLayout from "./pages/PageLayout";
 import ViewCourse from "./pages/ViewCourse";
 import Students from "./pages/Students";
-
+import ShowVideo from "./pages/ShowVideo";
+import EnrolledStudents from "./pages/EnrolledStudents";
+// import StudentLogin from "../Student/pages/StudentLogin";
 
 function AdminRouting () {
   return (
@@ -22,15 +24,22 @@ function AdminRouting () {
                <Route path="verify_otp/" element={<VerifyOTP/>}></Route>
                <Route path="Forgot_password/" element={<ForgotPassword/>}></Route>
                <Route path="reset-password/" element={<ResetPassword/>}></Route>
-              
+               {/* <Route path="StudentLogin/" element={<StudentLogin/>}></Route> */}
+               
 
                <Route path="admin_home/" element={<PageLayout />}>
                     <Route path="AddAdmin/" element={<AddAdminPage/>}></Route>
                     <Route path="courses/" element={<Courses />} ></Route>
+                    <Route path="students/" element={<Students/>}></Route>
                     
                     <Route path="addAdmin/" element={<AddAdminPage />}></Route>
                     <Route path="view-course/" element={<ViewCourse/>}></Route>
+                    <Route path="view-video/" element={<ShowVideo/>}></Route>
+                    <Route path="enrolled-students/" element={<EnrolledStudents/>}></Route>
+
+
                     <Route path="students/" element={<Students/>}></Route>
+
 
                    
 

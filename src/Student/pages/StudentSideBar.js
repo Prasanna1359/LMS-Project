@@ -1,10 +1,10 @@
 
 import { Link } from 'react-router-dom';
-import '../css/AdminHome.css';
+import  '../../Admin/css/AdminHome.css'
 import logo from "./assests/logo.jpg"
 
 
-const SideBar = () => {
+const StudentSideBar = () => {
  
    return (
      <div>
@@ -12,27 +12,27 @@ const SideBar = () => {
       <div className='asidebar'>
          <div className='logo'>
 
-          <img src={logo} alt="logo" />
+         <img src={logo} alt="logo" />
            
          </div>
          <div className='buttons'>
             
            <div className='navigator'> <button><Link className="nav-link active" aria-current="page" to="./courses">
               <span data-feather="home"></span>
-              Courses
+              Profile
             </Link></button></div>
            <div className='navigator'> <button><Link className="nav-link" to="./students">
               <span data-feather="students"></span>
-              Add Students
+              Courses
             </Link></button></div>
            <div className='navigator'>  <button> <Link className="nav-link" to="./enrolled-students">
               <span data-feather="enrolled-students"></span>
-              Enrolled Students
+              Change Password
             </Link></button></div>
-           <div className='navigator'>  <button><Link className="nav-link" to="./addAdmin">
+           {/* <div className='navigator'>  <button><Link className="nav-link" to="./addAdmin">
               <span data-feather="addAdmin"></span>
               Add Admin
-            </Link></button></div>
+            </Link></button></div> */}
 
             <div className='navigator'>  <button><Link className="nav-link" to="/">
               <span data-feather="/"></span>
@@ -48,5 +48,5 @@ const SideBar = () => {
  }
  
 
-export default SideBar;
+export default StudentSideBar;
 

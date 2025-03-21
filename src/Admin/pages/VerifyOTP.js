@@ -63,6 +63,7 @@ const VerifyOTP = () => {
     };
 
     const handleSubmit = async (event) => {
+    
         event.preventDefault();
         const enteredOtp = otp.join("");
         if(action === "login"){
@@ -79,8 +80,15 @@ const VerifyOTP = () => {
                 }
                 localStorage.setItem("access_token", data.access);
                 showToastMessage("OTP Verified Successfully!", "success");
-                
-                navigate('/admin_home', { state: { user: data } });
+                if(data.panel === "admin"){
+                    navigate('/admin_home', { state: { user: data } });
+
+                }
+
+                else{
+                    navigate('/student-home', { state: { user: data } });
+                }
+                // navigate('/admin_home', { state: { user: data } });
     
             } catch (error) {
                 showToastMessage(error.message, "danger");
@@ -136,41 +144,7 @@ const VerifyOTP = () => {
     };
 
     return (
-        // <Container className="d-flex justify-content-center align-items-center vh-100" style={{width:'100%'}}>
-        //     <Row>
-        //         <Col className="text-center box" >
-        //             <h2 className="mb-4">Enter OTP</h2>
-        //             <Form onSubmit={handleSubmit}>
-        //                 <div className="d-flex justify-content-center mb-3">
-        //                     {otp.map((digit, index) => (
-        //                         <Form.Control
-        //                             key={index}
-        //                             ref={(el) => (inputsRef.current[index] = el)}
-        //                             type="text"
-        //                             maxLength="1"
-        //                             value={digit}
-        //                             onChange={(e) => handleChange(index, e.target.value)}
-        //                             onPaste={handlePaste}
-        //                             className="text-center otp-box"
-        //                             style={{ width:"10px", height: "5px", fontSize: "15px",margin:'1%'  }}
-        //                         />
-        //                     ))}
-        //                 </div>
-        //                 <Button type="submit" >
-        //                     Verify OTP
-        //                 </Button>
-        //             </Form>
-        //             <div className="mt-3">
-        //                 {timeLeft > 0 ? (
-        //                     <p className="text-muted">Resend OTP in {timeLeft}s</p>
-        //                 ) : (
-        //                     <Button type="button" onClick={handleResend} disabled={!canResend} className="btn btn-secondary">
-        //                         Resend OTP
-        //                     </Button>
-        //                 )}
-        //             </div>
-
-
+       
                     <div className="login-container">
 
                         <div className="login-box">

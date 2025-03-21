@@ -11,7 +11,15 @@
 }
 
 .logo{
-    height: 35%;
+    height: 30%;
+  
+}
+
+.logo img{
+    height: 80%;
+    width: 80%;
+    text-align: center;
+    margin: 10%;
 }
 
 .buttons{
@@ -45,7 +53,7 @@
 .nav-bar{
     height: 60px;
     background-color: #F8F2DE;
-    
+   
     text-decoration: none;
     display: flex;
     
@@ -62,7 +70,49 @@
 }
 
 .profile {
-    text-align: end;
-    
-   
+  color: #ff416f;
 }
+
+
+
+/* Hide sidebar by default on mobile view */
+@media (max-width: 768px) {
+    .sidebar {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 250px;
+      height: 100%;
+      background-color: white; /* Sidebar background color */
+      z-index: 1000;
+      overflow-y: auto;
+      transition: transform 0.3s ease-in-out;
+      transform: translateX(-100%);
+    }
+    .sidebar.show {
+      transform: translateX(0);
+    }
+  
+    .menu-button {
+      display: block;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      z-index: 1100;
+      margin: 10px;
+      color: black;
+      position: fixed;
+      bottom: 88%;
+      right: 80%;
+    }
+  }
+  
+  /* Show the sidebar by default on larger screens */
+  @media (min-width: 769px) {
+    .menu-button {
+      display: none;
+    }
+  }
+  

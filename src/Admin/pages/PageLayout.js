@@ -3,11 +3,19 @@ import { Outlet } from 'react-router-dom';
 import TopBar from './TopBar';
 import SideBar from './SideBar';
 import '../css/pageLayout.css';
+import { useLocation } from 'react-router-dom';
+
+
 
 const PageLayout = () => {
+  const location = useLocation();
+  const data = location.state?.user?.username || localStorage.getItem("username"); // Use fallback
+
+  localStorage.setItem("username", data); // Ensure username is stored
+
   return (
-    <div className='topbar'>
-      <TopBar />
+    <div className="topbar">
+      <TopBar user={data} /> {/* Pass user as a prop */}
       <div className="container-fluid">
         <div className="row">
           <div className="col-md-3 col-lg-2 d-md-block bg-light sidebar">
@@ -23,3 +31,8 @@ const PageLayout = () => {
 };
 
 export default PageLayout;
+
+
+
+
+

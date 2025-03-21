@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'react-bootstrap';
 
-import { FaEye ,FaPen,FaTrash } from 'react-icons/fa';
+import { FaEye ,FaPen,FaTrash,FaArrowLeft  } from 'react-icons/fa';
 import axios from 'axios';
 import "../css/coursess.css";
+
 
 function Courses() {
     const [courseData, setCourseData] = useState({
@@ -16,11 +17,14 @@ function Courses() {
     });
     const [courseDetails, setCourseDetails] = useState([]);
     const navigate = useNavigate();
-    const [token, setToken] = useState("");
+    // const [token, setToken] = useState("");
     const [error, setError] = useState("");
     const [deleteId,setDeleteId]=useState(0)
     const [btn,setBtn]=useState("Add Course")
     const [showModal,setShowModal]=useState(false)
+    const [items,setItems]=useState([])
+    const [filteredItems, setFilteredItems] = useState(items);
+    const token=localStorage.getItem("access_token")
     const closeModal = () => {
         setShowModal(false)
         setCourseData({course_name: "",
@@ -53,17 +57,24 @@ function Courses() {
     }, []);
 
     const fetchCourseData = async () => {
+
+      if(!token){
+        console.log("no token")
+      }
         try {
             const response = await fetch("http://127.0.0.1:8000/AdminUrls/retreiveCourses/", {
                 method: "GET",
                 headers: {
-                    "Content-Type": "application/json",
-                },
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${ token }`,
+                }
             });
 
             const data = await response.json();
             setCourseDetails(data);
             setError(response);
+
+            setItems(data.course_name)
         } catch (error) {
             console.log(error);
         }
@@ -86,12 +97,20 @@ function Courses() {
 
         try {
 
+          if(!token){
+            console.log("no token")
+          }
+
           if(btn == "Add Course"){
 
           
             const response = await fetch("http://127.0.0.1:8000/AdminUrls/AddCourses/", {
                 method: "POST",
-                body: formData, // Send the FormData object (this includes file data)
+                body: formData, 
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${ token }`,
+                }// Send the FormData object (this includes file data)
             });
 
             if (!response.ok) {
@@ -111,7 +130,11 @@ function Courses() {
 
             const response = await fetch(`http://127.0.0.1:8000/AdminUrls/updateCourses/${courseData.id}/`, {
               method: "PUT",
-              body: formData, 
+              body: formData,
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${ token }`,
+              } 
           });
 
           if (!response.ok) {
@@ -137,8 +160,18 @@ function Courses() {
 
     const deletecourse = async(e) => {
       console.log("deltinggg")
+
+      if(!token){
+        console.log("no token")
+      }
       try{
-        const response=await axios.delete(`http://127.0.0.1:8000/AdminUrls/deleteCourse/${deleteId}/`)
+        const response=await fetch(`http://127.0.0.1:8000/AdminUrls/deleteCourse/${deleteId}/`,{
+          method:"DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${ token }`,
+          }
+        })
         console.log(response.data)
         setdeleteModal(false)
 
@@ -146,13 +179,26 @@ function Courses() {
         console.log(error)
       }
     }
+    
+    const handleSearch = (query) => {
+      const result = items.filter((item) =>
+        item.toLowerCase().includes(query.toLowerCase())
+      );
+      setFilteredItems(result);
+    };
+
+
+
+
     return (
         <div className='course-box'>
              
              <div className='d-flex justify-content-between align-items-center'>
-
+               <div><FaArrowLeft onClick={() => navigate('/admin_home')}/></div>
               <div><h4><u>COURSES:</u></h4></div>
-              <div></div>
+              <div>    
+            
+              </div>
               <div><button onClick={() => setShowModal(true)} className='login-btn' style={{width:'110%'}}>ADD COURSE</button></div>
 
                 
@@ -164,7 +210,7 @@ function Courses() {
                         <th>ID</th>
                         <th>COURSE NAME</th>
                         <th>TUTOR NAME</th>
-                        <th>PHOTO</th>
+                        
                         <th>ACTION</th>
                     </tr>
                 </thead>
@@ -174,9 +220,9 @@ function Courses() {
                             <td>{index +1}</td>
                             <td>{data.course_name}</td>
                             <td>{data.tutor_name}</td>
-                            <td>
+                            {/* <td>
                               <img src={data.course_photo} alt="course_photo"/>
-                            </td>
+                            </td> */}
                             <td>
                                 
                                 <span className='action' onClick={() => viewCourse(data)}><FaEye/></span>
@@ -274,3 +320,51 @@ function Courses() {
 }
 
 export default Courses;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import React, { useState } from "react";
+// import SearchBar from "./SearchBar";
+
+// const items = ["React", "JavaScript", "Django", "Python", "C++", "HTML", "CSS"];
+
+// const App = () => {
+//   const [filteredItems, setFilteredItems] = useState(items);
+
+//   const handleSearch = (query) => {
+//     const result = items.filter((item) =>
+//       item.toLowerCase().includes(query.toLowerCase())
+//     );
+//     setFilteredItems(result);
+//   };
+
+//   return (
+//     <div style={{ padding: "20px" }}>
+//       <SearchBar onSearch={handleSearch} />
+//       <ul>
+//         {filteredItems.map((item, index) => (
+//           <li key={index}>{item}</li>
+//         ))}
+//       </ul>
+//     </div>
+//   );
+// };
+
+// export default App;

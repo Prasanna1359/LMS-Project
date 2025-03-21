@@ -79,4 +79,44 @@
 .modal-content h2{
   color: #ff416c;
 }
+
+.login-btn {
+  width: 100%;
   
+  padding: 10px;
+  margin-bottom: 15px;
+  background-color: #e63a62;
+  
+  border: none;
+  border-radius: 35px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+
+.inputField *{
+  margin-top: 10px;
+  border-radius: 10px;
+}
+
+.inputField select{
+  width: 90%;
+}
+
+.inputField button {
+  padding: 8px 16px;
+  margin: 10px 10px 0 0;
+  background-color: #ff416c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 15%;
+  border-radius: 15px;
+  margin: 1%;
+}
+
+button[type='button'] {
+  background-color: #dc3545;
+  width: 30%;
+}

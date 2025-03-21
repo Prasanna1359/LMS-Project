@@ -36,11 +36,11 @@ class Courses(admin.ModelAdmin):
 admin.site.register(CoursesData,Courses)
 
 
-class Tutors(admin.ModelAdmin):
-    model=TutorData
-    list_display=['id','tutor_name','tutor_email','tutor_contact']
+# class Tutors(admin.ModelAdmin):
+#     model=TutorData
+#     list_display=['id','tutor_name','tutor_email','tutor_contact']
 
-admin.site.register(TutorData,Tutors)
+# admin.site.register(TutorData,Tutors)
 
 class videos(admin.ModelAdmin):
     model=Videos
@@ -48,3 +48,24 @@ class videos(admin.ModelAdmin):
 admin.site.register(Videos,videos)
 
 
+
+class students(admin.ModelAdmin):
+    model=StudentData
+    list_display=['id','user','student_name','email','password','display_courses','joined_date','end_date']
+    
+    def display_courses(self, obj):
+        return ", ".join([CoursesData.course_name for CoursesData in obj.course_name.all()])
+
+    display_courses.short_description = 'Courses' 
+admin.site.register(StudentData,students)
+
+
+class enrolledStudents(admin.ModelAdmin):
+    model=EnrollStudents
+    list_display=['id','student_name','email','display_courses','joined_date','end_date']
+    
+    def display_courses(self, obj):
+        return ", ".join([CoursesData.course_name for CoursesData in obj.course_name.all()])
+
+    display_courses.short_description = 'Courses' 
+admin.site.register(EnrollStudents,enrolledStudents)

@@ -42,6 +42,7 @@ class AdminLoginView(APIView):
                 return Response({
                 "message": "Login successful.OTP sent to your email.",
                 "id":user.id,
+                "panel":user.panel
 
             }, status=status.HTTP_200_OK)
             
@@ -49,8 +50,6 @@ class AdminLoginView(APIView):
 
 
 class verify_otp(APIView):
-   
-
     def post(self, request):
         print("Incoming Data:", request.data) 
 
@@ -78,7 +77,8 @@ class verify_otp(APIView):
                     'message': 'Login Successful',
                     'refresh': str(refresh),
                     'access': str(refresh.access_token),
-                    'username':user.username
+                    'username':user.username,
+                    "panel":user.panel
                 })
 
         return Response({'message': 'Invalid OTP'}, status=400)
@@ -102,7 +102,7 @@ class resend_otp(APIView):
 
 
 class RetreiveCoursesDataView(APIView):
-    # permission_classes=[IsAuthenticated]
+    permission_classes=[IsAuthenticated]
 
     def get(self,request):
         data=CoursesData.objects.all()
@@ -112,14 +112,14 @@ class RetreiveCoursesDataView(APIView):
     
 class AddCourseView(APIView):
     parser_classes = [MultiPartParser, FormParser]
-    # permission_classes=[IsAuthenticated]
+    permission_classes=[IsAuthenticated]
 
     def post(self,request):
         serializer = CourseSerializer(data=request.data)
     
         if serializer.is_valid():
             serializer.save()
-            Course.objects.create(course_name=request.data.get('course_name'))
+            CoursesData.objects.create(course_name=request.data.get('course_name'))
 
 
             print("savinggggg")
@@ -128,7 +128,8 @@ class AddCourseView(APIView):
     
 
 class VerifyEmailView(APIView):
-
+    # permission_classes=[IsAuthenticated]
+    
     def post(self,request):
         email=request.data.get('email')
         print(email)
@@ -185,7 +186,8 @@ class verify_FP_otp(APIView):
                     'message': 'OTP verified',
                     'refresh': str(refresh),
                     'access': str(refresh.access_token),
-                    'username':user.username
+                    'username':user.username,
+                    'panel':user.panel
                 })
 
         return Response({'message': 'Invalid OTP'}, status=400)
@@ -205,6 +207,8 @@ class ResetPassword(APIView):
 
 
 class DeleteCourses(APIView):
+    permission_classes=[IsAuthenticated]
+
 
     def delete(self,request,id):
         print("deletingggg")
@@ -219,6 +223,8 @@ class DeleteCourses(APIView):
         
 
 class retreiveAdminsView(APIView):
+    permission_classes=[IsAuthenticated]
+
     def get(self,request):
         data=CustomUser.objects.filter(panel="admin")
         serializer=AdminRegistrationSerializer(data,many=True)
@@ -227,6 +233,8 @@ class retreiveAdminsView(APIView):
 
 
 class updateCoursesView(APIView):
+    permission_classes=[IsAuthenticated]
+
     def put(self,request,id):
         try:
             course = CoursesData.objects.get(id=id)
@@ -243,22 +251,19 @@ class updateCoursesView(APIView):
 
  
 class CourseListAPIView(APIView):
+    permission_classes=[IsAuthenticated]
+
     def get(self, request):
         courses = CoursesData.objects.all()
         serializer = CourseSerializer(courses, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-class StudentDataCreateAPIView(APIView):
-    def post(self, request):
-        serializer = StudentDataSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
 
 
 class VideoUploadView(APIView):
+    permission_classes=[IsAuthenticated]
+
     parser_classes = (MultiPartParser, FormParser)
 
     def post(self, request):
@@ -270,6 +275,8 @@ class VideoUploadView(APIView):
     
 
 class fetchVideosView(APIView):
+    permission_classes=[IsAuthenticated]
+
     def get(self,request,id):
         videos = Videos.objects.filter(course=id)
         serializer = VideosSerializer(videos, many=True)
@@ -277,12 +284,91 @@ class fetchVideosView(APIView):
 
 
 class DeleteVideoView(APIView):
+    permission_classes=[IsAuthenticated]
+
     def delete(self,request,id):
         try:
             video = Videos.objects.get(id=id)
             video.delete()
             return Response(status=204)
         except Videos.DoesNotExist:
+            return Response(status=404)
+        except Exception as e:
+            return Response({"detail": str(e)}, status=400)
+        
+
+
+class updateVideosView(APIView):
+    permission_classes=[IsAuthenticated]
+
+    def put(self,request,id):
+
+        try:
+            video = Videos.objects.get(id=id)
+            serializer = VideosSerializer(video, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=200)
+            return Response(serializer.errors, status=400)
+        except Videos.DoesNotExist:
+            return Response(status=404)
+        except Exception as e:
+            return Response({"detail": str(e)},status=400)
+
+
+
+
+class StudentDataCreateAPIView(APIView):
+    permission_classes=[IsAuthenticated]
+
+    def post(self, request):
+        serializer = StudentSerializer(data=request.data)
+        print(request.data,"data from frontend")
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+
+ 
+class retreiveStudentsView(APIView):
+    permission_classes=[IsAuthenticated]
+
+    def get(self,request):
+        data=StudentData.objects.all()
+        serializer=StudentSerializer(data,many=True)
+        print(serializer.data)
+        return Response(serializer.data,status=200)
+
+
+class updateStudentDataView(APIView):
+    permission_classes=[IsAuthenticated]
+
+    def put(self,request,id):
+        try:
+            course = StudentData.objects.get(id=id)
+            serializer = StudentSerializer(course, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=200)
+            return Response(serializer.errors, status=400)
+        except StudentData.DoesNotExist:
+            return Response(status=404)
+        except Exception as e:
+            return Response({"detail": str(e)},status=400)
+
+class deleteStudentView(APIView):
+    permission_classes=[IsAuthenticated]
+
+    def delete(self, request, *args, **kwargs):
+        print("deletingggg")
+        try:
+            id = kwargs.get('id')  # Fetching the id from kwargs
+            course = StudentData.objects.get(id=id)
+            course.delete()
+            return Response(status=204)
+        except StudentData.DoesNotExist:
             return Response(status=404)
         except Exception as e:
             return Response({"detail": str(e)}, status=400)

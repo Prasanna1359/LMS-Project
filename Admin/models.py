@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser,Group,Permission
 from django.db import models
 from django.conf import settings
 import random
+# import settings
 
 class CustomUser(AbstractUser):
     groups = models.ManyToManyField(Group, related_name="groups_tokens")
@@ -14,7 +15,7 @@ class CustomUser(AbstractUser):
     ]
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=150, unique=False,null=True)  
-    password=models.CharField(max_length=50)
+    
     panel=models.CharField(max_length=20,choices=panel_choices)
     profile=models.ImageField(upload_to='uploads/',null=True)
     USERNAME_FIELD = 'email'
@@ -61,18 +62,35 @@ class TutorData(models.Model):
         return self.tutor_email
     
 
-
-class StudentData(models.Model):
-
-    user=models.ForeignKey(CustomUser,on_delete=models.CASCADE)
-    courses=models.ManyToManyField(CoursesData)
-    joined_date=models.DateField()
-    end_date=models.DateField()
-   
-
 class Videos(models.Model):
 
     course=models.ForeignKey(CoursesData,on_delete=models.CASCADE)
     video=models.FileField(upload_to='videos/',null=True)
     uploaded_at=models.DateField(auto_now_add=True)
     description=models.CharField(max_length=100)
+
+
+
+class StudentData(models.Model):
+
+    user=models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+    student_name=models.CharField(max_length=100)
+    email=models.EmailField(unique=False,null=True)
+    password=models.CharField(max_length=20)
+    course_name=models.ManyToManyField(CoursesData)
+    joined_date=models.DateField()
+    end_date=models.DateField()
+
+    def __str__(self):
+        return self.student_name
+
+    
+class EnrollStudents(models.Model):
+    course_name = models.ManyToManyField(CoursesData)
+    student_name = models.CharField(max_length=100,unique=False)
+    email = models.EmailField(unique=False)
+    joined_date = models.DateField()
+    end_date = models.DateField()
+
+    def __str__(self):
+        return self.student_name

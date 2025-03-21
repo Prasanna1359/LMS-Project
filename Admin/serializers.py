@@ -39,7 +39,9 @@ class AdminRegistrationSerializer(serializers.ModelSerializer):
         user = CustomUser.objects.create_user(
             username=validated_data['username'],
             email=validated_data['email'],
-            password=validated_data['password']
+            password=validated_data['password'],
+            panel=validated_data['panel'],
+            profile=validated_data.get('profile'),
         )
         if validated_data['panel'] == "admin":
             user.is_active = True  
@@ -83,6 +85,8 @@ class AdminLoginSerializer(serializers.ModelSerializer):
             if user.check_password(password):
                 if user.is_active and user.is_staff:
                     data['user'] = user
+                    print(user.panel)
+                    data['panel']=user.panel
                     print(data,"data[user]")
                 else:
                     raise serializers.ValidationError("User is not active or not an admin.")
@@ -92,7 +96,7 @@ class AdminLoginSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Must include 'email' and 'password'.")
 
         return data
-    
+
 
 class LoginOTPSerializer(serializers.ModelSerializer):
     class Meta:
@@ -100,6 +104,8 @@ class LoginOTPSerializer(serializers.ModelSerializer):
         fields=['user','otp']
     user=serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all())
     otp=serializers.CharField(max_length=6)
+
+
 
 class CourseSerializer(serializers.ModelSerializer):
     class Meta:
@@ -121,8 +127,122 @@ class VideosSerializer(serializers.ModelSerializer):
         fields='__all__'
 
 
+# class StudentSerializer(serializers.ModelSerializer):
+#     course_name = serializers.ListField(child=serializers.CharField(), write_only=True)
 
-class StudentDataSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = StudentData
+#         fields = ['id', 'student_name', 'email', 'course_name', 'password', 'joined_date', 'end_date']
+    
+#     def get_course_name(self, obj):
+#         course_names = [course.course_name for course in obj.course_name.all()]
+
+#         print(f"Course names for student {obj.student_name}: {course_names}")
+#         return course_names
+
+#     def create(self, validated_data):
+#         # Pop course_data from validated_data if it exists
+#         course_data = validated_data.pop('course_name', [])
+#         print(course_data, "courses data")
+#         plain_password = validated_data['password']
+#         email = validated_data['email']
+
+#         # Get or create the CustomUser instance
+#         user, created = CustomUser.objects.get_or_create(
+#             email=email,
+#             defaults={
+#                 "username": validated_data['student_name'],
+#                 "password": plain_password,
+#                 "panel": "student",
+#             }
+#         )
+
+#         # Create a StudentData instance using the user instance
+#         student = StudentData.objects.create(
+#             user=user,
+#             student_name=validated_data['student_name'],
+#             password=plain_password,
+#             email=email,
+#             joined_date=validated_data['joined_date'],
+#             end_date=validated_data['end_date']
+#         )
+
+#         # Set the course_name for the student
+#         if course_data:
+#             student.course_name.set(course_data)
+
+#         # Create an EnrollStudents instance
+#         enroll_student = EnrollStudents.objects.create(
+#             student_name=validated_data['student_name'],
+#             email=email,
+#             joined_date=validated_data['joined_date'],
+#             end_date=validated_data['end_date']
+#         )
+
+#         # Set the course_name for the enrollment
+#         if course_data:
+#             enroll_student.course_name.set(course_data)
+
+#         return student
+
+
+class StudentSerializer(serializers.ModelSerializer):
+    course_name = serializers.SerializerMethodField()
     class Meta:
         model = StudentData
-        fields = ['id','user', 'courses', 'joined_date', 'end_date']
+        fields = ['id','student_name', 'email', 'course_name', 'password', 'joined_date', 'end_date']
+
+
+    def get_course_name(self, obj):
+
+        course_names = [course.course_name for course in obj.course_name.all()]
+
+        print(f"Course names for student {obj.student_name}: {course_names}")
+        return course_names
+
+    
+    def create(self, validated_data):
+    # Pop course_data from validated_data if it exists
+        course_data = validated_data.pop('course_name', [])
+        print(course_data,"courses data")
+        plain_password = validated_data['password']
+        email = validated_data['email']
+
+        # Get or create the CustomUser instance
+        user, created = CustomUser.objects.get_or_create(
+            email=email,
+            defaults={
+                "username": validated_data['student_name'],
+                "password": plain_password,
+                "panel": "student",
+            }
+        )
+
+        # Create a StudentData instance using the user instance
+        student = StudentData.objects.create(
+            user=user,
+            student_name=validated_data['student_name'],
+            password=plain_password,
+            email=email,
+            joined_date=validated_data['joined_date'],
+            end_date=validated_data['end_date']
+        )
+
+        # Set the course_name for the student
+        if course_data:
+            student.course_name.set(course_data)
+
+        # Create an EnrollStudents instance
+        enroll_student = EnrollStudents.objects.create(
+            student_name=validated_data['student_name'],
+            email=email,
+            joined_date=validated_data['joined_date'],
+            end_date=validated_data['end_date']
+        )
+
+        # Set the course_name for the enrollment
+        if course_data:
+            enroll_student.course_name.set(course_data)
+
+        return student
+

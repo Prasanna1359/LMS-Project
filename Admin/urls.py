@@ -26,6 +26,13 @@ urlpatterns=[
     path('updateStudent/<int:id>/',updateStudentDataView.as_view(),name='updateStudent'),
     path('deleteStudent/<int:id>/',deleteStudentView.as_view(),name='deleteStudent'),
 
+    path('searchCourses',CoursesSearchView.as_view({'get': 'list'}),name='searchCourses'),
+    path('searchDescription',VideosSearchView.as_view({'get': 'list'}),name='searchDescription'),
+    path('SearchStudents',StudentSearchView.as_view({'get': 'list'}),name='SearchStudents'),
+    path('SearchAdmins',AdminSearchView.as_view({'get': 'list'}),name='SearchAdmins'),
+    
+    path('searchprofile',SearchProfileView.as_view(),name='searchprofile'),
+    path('searchCoursesData',SearchCoursesData.as_view(),name='searchCoursesData'),
     
 
 

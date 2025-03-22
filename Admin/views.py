@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from rest_framework import status
+from rest_framework import status,viewsets
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
@@ -78,7 +78,9 @@ class verify_otp(APIView):
                     'refresh': str(refresh),
                     'access': str(refresh.access_token),
                     'username':user.username,
-                    "panel":user.panel
+                    "panel":user.panel,
+                    "email":user.email,
+                    "id":user.id
                 })
 
         return Response({'message': 'Invalid OTP'}, status=400)
@@ -109,22 +111,76 @@ class RetreiveCoursesDataView(APIView):
         serializer=CourseSerializer(data,many=True)
         print(serializer.data)
         return Response(serializer.data,status=200)
-    
-class AddCourseView(APIView):
-    parser_classes = [MultiPartParser, FormParser]
+
+
+
+class CoursesSearchView(viewsets.ModelViewSet):
+
     permission_classes=[IsAuthenticated]
 
-    def post(self,request):
-        serializer = CourseSerializer(data=request.data)
+    queryset =CoursesData.objects.all()
+    serializer_class=CourseSerializer
+
+    def get_queryset(self):
+        qs=CoursesData.objects.all()
+        course_name=self.request.query_params.get('course_name')
+
+        if course_name is not None:
+            qs=qs.filter(course_name__icontains=course_name)
+        return qs
+
+
+class SearchProfileView(APIView):
+    permission_classes=[IsAuthenticated]
+
+    def get(self,request):
+        email=self.request.query_params.get('email')
+        data=CustomUser.objects.get(email=email)
+        serializer=AdminRegistrationSerializer(data)
+        print(serializer.data)
+        return Response(serializer.data,status=200)
+
+
+class SearchCoursesData(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        email = request.query_params.get('email')
+
+        # Retrieve student record
+        student = StudentData.objects.filter(email=email).first()
+        if not student:
+            return Response({"error": "Student not found"}, status=404)
+
+        # Retrieve related course names from StudentData
+        course_names = student.course_name.values_list("course_name", flat=True)
+
+        # Retrieve CoursesData records for the related course names
+        course_data = CoursesData.objects.filter(course_name__in=course_names)
+        
+        serializer = CourseSerializer(course_data, many=True)
+        print(serializer.data, "Courses data in student module")
+
+        return Response(serializer.data, status=200)
+
+
+class AddCourseView(APIView):
     
-        if serializer.is_valid():
-            serializer.save()
-            CoursesData.objects.create(course_name=request.data.get('course_name'))
+    permission_classes=[IsAuthenticated]
 
+    def post(self, request):
+        course_name = request.data.get('course_name')
 
-            print("savinggggg")
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if not course_name:
+            return Response({"message": "Course name is required"}, status=400)
+
+        # Check if the course already exists
+        if CoursesData.objects.filter(course_name=course_name).exists():
+            return Response({"message": "Course with this name already exists"}, status=400)
+
+        # Create the new course
+        course = CoursesData.objects.create(course_name=course_name)
+        return Response({"message": "Course created successfully", "course_id": course.id}, status=201)
     
 
 class VerifyEmailView(APIView):
@@ -283,6 +339,57 @@ class fetchVideosView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+
+
+class VideosSearchView(viewsets.ModelViewSet):
+
+    permission_classes=[IsAuthenticated]
+
+    queryset =Videos.objects.all()
+    serializer_class=VideosSerializer
+
+    def get_queryset(self):
+        qs=Videos.objects.all()
+        description=self.request.query_params.get('description')
+
+        if description is not None:
+            qs=qs.filter(description__icontains=description)
+        return qs
+    
+
+class StudentSearchView(viewsets.ModelViewSet):
+
+    permission_classes=[IsAuthenticated]
+
+    queryset =StudentData.objects.all()
+    serializer_class=StudentSerializer
+
+    def get_queryset(self):
+        qs=StudentData.objects.all()
+        student_name=self.request.query_params.get('student_name')
+
+        if student_name is not None:
+            qs=qs.filter(student_name__icontains=student_name)
+        return qs
+
+
+class AdminSearchView(viewsets.ModelViewSet):
+
+    permission_classes=[IsAuthenticated]
+
+    queryset =CustomUser.objects.all()
+    serializer_class=AdminRegistrationSerializer
+
+    def get_queryset(self):
+        qs=CustomUser.objects.filter(panel="admin")
+        username=self.request.query_params.get('username')
+
+        if username is not None:
+            qs=qs.filter(username__icontains=username)
+        return qs
+
+ 
+
 class DeleteVideoView(APIView):
     permission_classes=[IsAuthenticated]
 
@@ -342,21 +449,35 @@ class retreiveStudentsView(APIView):
         return Response(serializer.data,status=200)
 
 
-class updateStudentDataView(APIView):
-    permission_classes=[IsAuthenticated]
 
-    def put(self,request,id):
+class updateStudentDataView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request, id):
         try:
-            course = StudentData.objects.get(id=id)
-            serializer = StudentSerializer(course, data=request.data, partial=True)
+            student = StudentData.objects.get(id=id)
+            data = request.data.copy()
+
+            # Extract course names from request
+            course_names = data.pop('course_name', [])
+            if isinstance(course_names, str):  
+                course_names = [course_names]  # Ensure it's always a list
+
+            serializer = StudentSerializer(student, data=data, partial=True)
             if serializer.is_valid():
-                serializer.save()
+                updated_student = serializer.save()
+
+                # Convert course names to actual course objects and update the relationship
+                courses = CoursesData.objects.filter(course_name__in=course_names)
+                updated_student.course_name.set(courses)
+
                 return Response(serializer.data, status=200)
             return Response(serializer.errors, status=400)
+
         except StudentData.DoesNotExist:
-            return Response(status=404)
+            return Response({"detail": "Student not found"}, status=404)
         except Exception as e:
-            return Response({"detail": str(e)},status=400)
+            return Response({"detail": str(e)}, status=400)
 
 class deleteStudentView(APIView):
     permission_classes=[IsAuthenticated]
@@ -372,3 +493,6 @@ class deleteStudentView(APIView):
             return Response(status=404)
         except Exception as e:
             return Response({"detail": str(e)}, status=400)
+
+
+

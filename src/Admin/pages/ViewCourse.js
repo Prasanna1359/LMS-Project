@@ -1,28 +1,23 @@
-
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
-import 'react-bootstrap';
-import { FaEye, FaPen, FaTrash ,FaArrowLeft} from 'react-icons/fa';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { FaEye, FaPen, FaTrash, FaArrowLeft } from 'react-icons/fa';
 import '../css/coursess.css';
-import axios from 'axios';
 
 function ViewCourse() {
   const location = useLocation();
   const data = location.state?.course_data;
-  const token=localStorage.getItem("access_token")
+  const token = localStorage.getItem("access_token");
   const [videoDetails, setVideoDetails] = useState({
     course: '',
     description: '',
     video: '',
   });
-
   const [deleteModal, setDeleteModal] = useState(false);
   const [btn, setBtn] = useState('Upload');
   const [videoData, setVideoData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [deleteId, setDeleteId] = useState(0);
-
+  const [serachTxt, setSearchTxt] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,22 +30,22 @@ function ViewCourse() {
     }
   }, [data]);
 
-  const fetchData = async () => {
-    if (!data) return;
+  useEffect(() => {
+    SearchCourses();
+  }, [serachTxt]);
 
-    if(!token){
-       console.log("No token")
-    }
+  const fetchData = async () => {
+    if (!data || !token) return;
 
     try {
       const response = await fetch(
         `http://127.0.0.1:8000/AdminUrls/fetchVideos/${data.id}/`,
         {
           method: 'GET',
-            headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${ token }`,
-    }
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          }
         }
       );
 
@@ -77,7 +72,7 @@ function ViewCourse() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    
+
     if (!videoDetails.video) {
       alert('Please select a video file.');
       return;
@@ -88,51 +83,26 @@ function ViewCourse() {
     formData.append('description', videoDetails.description);
     formData.append('video', videoDetails.video);
 
-    if(!token){
-      console.log("no token")
-    }
-
     try {
-      
-
-      if (btn === 'Upload') {
-        const response = await fetch(
-          'http://127.0.0.1:8000/AdminUrls/upload_video/',{
-            method: 'POST',
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${ token }`,
-            },
-            body: formData,
-
-          }
-         
-        );
-
-        console.log('Video uploaded successfully:', response.data);
-        alert('Video uploaded successfully!');
-        fetchData();
-      } else if (btn === 'Save') {
-        const response = await fetch(
-          `http://127.0.0.1:8000/AdminUrls/updateVideos/${videoDetails.id}/`,
-          {
-            method: 'PUT',
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${ token }`,
-            },
-            body: formData,
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error('Failed to update video');
+      const response = await fetch(
+        btn === 'Upload'
+          ? 'http://127.0.0.1:8000/AdminUrls/upload_video/'
+          : `http://127.0.0.1:8000/AdminUrls/updateVideos/${videoDetails.id}/`,
+        {
+          method: btn === 'Upload' ? 'POST' : 'PUT',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
         }
+      );
 
-        console.log('Video updated successfully!');
-        fetchData();
+      if (!response.ok) {
+        throw new Error('Failed to process request');
       }
 
+      alert(btn === 'Upload' ? 'Video uploaded successfully!' : 'Video updated successfully!');
+      fetchData();
       closeModal();
     } catch (error) {
       console.error('Error uploading/updating video:', error);
@@ -146,9 +116,6 @@ function ViewCourse() {
   };
 
   const deleteVideo = async () => {
-    if(!token){
-      console.log("no token")
-    }
     try {
       const response = await fetch(
         `http://127.0.0.1:8000/AdminUrls/DeleteVideo/${deleteId}/`,
@@ -156,9 +123,8 @@ function ViewCourse() {
           method: 'DELETE',
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${ token }`,
+            Authorization: `Bearer ${token}`,
           },
-
         }
       );
 
@@ -180,23 +146,51 @@ function ViewCourse() {
     setShowModal(true);
   };
 
+  const showvideo = (data) => {
+    navigate('../view-video', { state: { videoData: data } });
+  };
+
+  const SearchCourses = async () => {
+    try {
+      const response = await fetch(
+        `http://127.0.0.1:8000/AdminUrls/searchDescription?description=${serachTxt}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          }
+        }
+      );
+
+      const data = await response.json();
+      setVideoData(data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   if (!data) {
     return <div>Loading...</div>;
-  }
-
-  const showvideo=(data) => {
-
-    console.log(data)
-
-    navigate('../view-video',{state:{videoData:data}})
-
   }
 
   return (
     <div className='course-box'>
       <div className='d-flex justify-content-between align-items-center'>
-        <div><FaArrowLeft onClick={() => navigate('../courses')}/></div>
-        <h4>{data.course_name}</h4>
+        <div className='d-flex'>
+        <div className='me-3'><FaArrowLeft onClick={() => navigate('../courses')} /></div>
+        <h4>COURSE:   <span style={{color:"black"}}>{data.course_name}</span></h4>
+
+        </div>
+        
+        <div>
+          <input
+            type="search"
+            placeholder='search by topic'
+            value={serachTxt}
+            onChange={(e) => setSearchTxt(e.target.value)}
+          />
+        </div>
         <button
           onClick={() => setShowModal(true)}
           className='login-btn'
@@ -210,7 +204,7 @@ function ViewCourse() {
         <thead>
           <tr>
             <th>ID</th>
-            <th>DESCRIPTION</th>
+            <th>TOPIC</th>
             <th>UPLOADED AT</th>
             <th>ACTION</th>
           </tr>
@@ -259,10 +253,8 @@ function ViewCourse() {
                 placeholder='Choose Video File'
                 required
               />
-              
-
               <div className='inputField'>
-                <button type="submit" >{btn}</button>
+                <button type="submit">{btn}</button>
                 <button type="button" onClick={closeModal}>CANCEL</button>
               </div>
             </form>

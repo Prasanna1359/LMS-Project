@@ -21,12 +21,12 @@ const StudentSideBar = () => {
               <span data-feather="home"></span>
               Profile
             </Link></button></div>
-           <div className='navigator'> <button><Link className="nav-link" to="./students">
-              <span data-feather="students"></span>
+           <div className='navigator'> <button><Link className="nav-link" to="./StudentCourses">
+              <span data-feather="StudentCourses"></span>
               Courses
             </Link></button></div>
-           <div className='navigator'>  <button> <Link className="nav-link" to="./enrolled-students">
-              <span data-feather="enrolled-students"></span>
+           <div className='navigator'>  <button> <Link className="nav-link" to="./studentChangePassword">
+              <span data-feather="studentChangePassword"></span>
               Change Password
             </Link></button></div>
            {/* <div className='navigator'>  <button><Link className="nav-link" to="./addAdmin">

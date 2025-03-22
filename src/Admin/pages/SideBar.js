@@ -34,8 +34,8 @@ const SideBar = () => {
               Add Admin
             </Link></button></div>
 
-            <div className='navigator'>  <button><Link className="nav-link" to="/">
-              <span data-feather="/"></span>
+            <div className='navigator'>  <button><Link className="nav-link" to="./logout">
+              <span data-feather="logout"></span>
               Logout
             </Link></button></div>
  

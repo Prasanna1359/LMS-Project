@@ -78,6 +78,7 @@ const VerifyOTP = () => {
                 if (!response.ok){
                      throw new Error(data.message || "Invalid OTP");
                 }
+                console.log("data",data)
                 localStorage.setItem("access_token", data.access);
                 showToastMessage("OTP Verified Successfully!", "success");
                 if(data.panel === "admin"){

@@ -15,7 +15,7 @@ function ShowVideo  ()  {
     <div>
       <div className='d-flex'>
       <div className='me-5'><FaArrowLeft onClick={() => navigate(-1)}/></div>
-      <h4 style={{color:"#e63a62"}}>{video.description}</h4>
+      <h4 style={{color:"#e63a62"}}>TOPIC:<span style={{color:"black"}}>{video.description}</span></h4>
       </div>
      
         <video width="600" controls autoPlay>

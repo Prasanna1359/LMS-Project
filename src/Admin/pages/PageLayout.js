@@ -9,9 +9,14 @@ import { useLocation } from 'react-router-dom';
 
 const PageLayout = () => {
   const location = useLocation();
-  const data = location.state?.user?.username || localStorage.getItem("username"); // Use fallback
+  const data = location.state?.user?.username || localStorage.getItem('user'); 
+  const email = location.state?.user?.email || localStorage.getItem('email');
+  const id = location.state?.user?.id || localStorage.getItem('id'); 
 
-  localStorage.setItem("username", data); // Ensure username is stored
+
+  localStorage.setItem('user', data);
+  localStorage.setItem('email', email);
+  localStorage.setItem('id', id); // Ensure username is stored
 
   return (
     <div className="topbar">

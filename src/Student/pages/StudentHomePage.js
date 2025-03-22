@@ -40,10 +40,17 @@ import { useState } from 'react';
 
 const StudentHomePage = () => {
   const location = useLocation();
-  const data = location.state?.user?.username || localStorage.getItem('username'); // Use fallback
+  const data = location.state?.user?.username || localStorage.getItem('user'); 
+  const email = location.state?.user?.email || localStorage.getItem('email');
+  const id = location.state?.user?.id || localStorage.getItem('id'); // Use fallback
+   // Use fallback
+  
   const [sidebarVisible, setSidebarVisible] = useState(false);
 
-  localStorage.setItem('username', data);
+  localStorage.setItem('user', data);
+  localStorage.setItem('email', email);
+  localStorage.setItem('id', id);
+
 
   const toggleSidebar = () => {
     setSidebarVisible(!sidebarVisible);

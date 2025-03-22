@@ -49,7 +49,7 @@ function EnrolledStudents () {
   return (
     <div className='students '>
         <div className='d-flex  '>
-        <div className='me-5'><FaArrowLeft onClick={() => navigate('/admin_home')}/></div>
+        <div className='me-3'><FaArrowLeft onClick={() => navigate('/admin_home')}/></div>
         
          <div><h4><u>ENROLLED STUDENTS:</u></h4></div>
 
@@ -72,7 +72,10 @@ function EnrolledStudents () {
                                 <tr key={index}>
                                     <td>{data.student_name}</td>
                                     <td>{data.email}</td>
-                                    <td>{data.course_name.join(', ')}</td>
+                                    <td>{data.course_display.join(', ')}</td>
+
+                                    {/* <td>{Array.isArray(data.course_name.join) ? data.course_name.join.join(", ") : data.course_name}</td> */}
+
                                     <td>{data.joined_date}</td>
                                     <td>{data.end_date}</td>
                                    

@@ -21,6 +21,7 @@ function AddAdminPage ()  {
     const [error,setError]=useState("")
     const [showModal,setShowModal]=useState(false)
     const token=localStorage.getItem("access_token")
+    const [serachTxt,setSearchTxt]=useState("")
 
     const changeHandler=(e)=> {
         setAdminData({...adminData,[e.target.name]:e.target.value});
@@ -37,6 +38,7 @@ function AddAdminPage ()  {
         formData.append('profile', adminData.profile);
         if(!token){
             console.log("no token")
+            navigate('/admin_home');
         }
         try {
             const response = await axios.post("http://127.0.0.1:8000/AdminUrls/AdminRegister/", formData, {
@@ -85,14 +87,53 @@ function AddAdminPage ()  {
         }
     };
 
+
+    
+    
+         useEffect(()=>{
+                 SearchAdmin()
+            },[serachTxt])
+            
+            const SearchAdmin =async() => {
+        
+              try{
+        
+                const response=await fetch(`http://127.0.0.1:8000/AdminUrls/SearchAdmins?username=${serachTxt}`,{
+                  method:"GET",
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${ token }`,
+                  }
+                })
+                  const data=await response.json()
+                  console.log(data)
+                  setAdminDetails(data)
+        
+               
+        
+              }catch(e){
+                console.log(e)
+              }
+        
+            }
+        
+
   return (
     <>
         <div className='course-box'>
 
             <div className='d-flex justify-content-between align-items-center'>
-                <div><FaArrowLeft onClick={() => navigate('/admin_home')}/></div>
+                <div className='d-flex'>
+
+                <div className='me-3'><FaArrowLeft onClick={() => navigate('/admin_home')}/></div>
                 <div><h4><u>ADMINS</u></h4></div>
-                <div></div>
+
+                </div>
+                
+                <div>
+                <input type="search" placeholder='search by name' value={serachTxt} onChange={(e) => setSearchTxt(e.target.value) } />   
+               
+                </div>
                 <div >  <button onClick={() => setShowModal(true)} className='login-btn ' >ADD ADMIN</button></div>
             </div>
                      
@@ -102,9 +143,9 @@ function AddAdminPage ()  {
                     <table className="table table-hover">
                         <thead>
                             <tr>
-                               <th>s.no</th>
-                               <th>name</th>
-                               <th>email</th>
+                               <th>ID</th>
+                               <th>NAME</th>
+                               <th>EMAIL</th>
                             </tr>
                         </thead>
                         <tbody>

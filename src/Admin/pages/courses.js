@@ -22,8 +22,7 @@ function Courses() {
     const [deleteId,setDeleteId]=useState(0)
     const [btn,setBtn]=useState("Add Course")
     const [showModal,setShowModal]=useState(false)
-    const [items,setItems]=useState([])
-    const [filteredItems, setFilteredItems] = useState(items);
+   
     const token=localStorage.getItem("access_token")
     const closeModal = () => {
         setShowModal(false)
@@ -35,8 +34,8 @@ function Courses() {
     }
     const [deleteModal,setdeleteModal]=useState(false)
     // const [data,setData]=useState([])
-
-
+    const [serachTxt,setSearchTxt]=useState("")
+     
     const closeDeleteModal = () => {
         setdeleteModal(false)
     }
@@ -74,7 +73,6 @@ function Courses() {
             setCourseDetails(data);
             setError(response);
 
-            setItems(data.course_name)
         } catch (error) {
             console.log(error);
         }
@@ -85,74 +83,78 @@ function Courses() {
     };
 
     const submitHandler = async (e) => {
-        e.preventDefault();
-
-        // Create a new FormData instance to handle file uploads
-        const formData = new FormData();
-        formData.append('course_name', courseData.course_name);
-        formData.append('course_photo', courseData.course_photo); // Send file
-        formData.append('tutor_name', courseData.tutor_name);
-        formData.append('tutor_email', courseData.tutor_email);
-        formData.append('tutor_contact', courseData.tutor_contact);
-
-        try {
-
-          if(!token){
-            console.log("no token")
+      e.preventDefault();
+  
+      // Create a new FormData instance to handle file uploads
+      const formData = new FormData();
+      formData.append('course_name', courseData.course_name);
+      formData.append('course_photo', courseData.course_photo); // Send file
+      formData.append('tutor_name', courseData.tutor_name);
+      formData.append('tutor_email', courseData.tutor_email);
+      formData.append('tutor_contact', courseData.tutor_contact);
+  
+      try {
+          if (!token) {
+              console.log("no token");
+              navigate('/admin_home');
+              return;
           }
-
-          if(btn == "Add Course"){
-
-          
-            const response = await fetch("http://127.0.0.1:8000/AdminUrls/AddCourses/", {
-                method: "POST",
-                body: formData, 
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${ token }`,
-                }// Send the FormData object (this includes file data)
-            });
-
-            if (!response.ok) {
-                throw new Error("Failed to submit form");
-            }
-
-            // Handle success (e.g., reset form or show success message)
-            console.log("Course added successfully!");
-            setCourseData({course_name: "",
-              course_photo: "",
-              tutor_name: "",
-              tutor_email: "",
-              tutor_contact: "",})
-            setShowModal(false)
+  
+          if (btn === "Add Course") {
+              const response = await fetch("http://127.0.0.1:8000/AdminUrls/AddCourses/", {
+                  method: "POST",
+                  body: formData,
+                  headers: {
+                      Authorization: `Bearer ${token}`,
+                  }
+              });
+  
+              if (!response.ok) {
+                  throw new Error("Failed to submit form");
+              }
+  
+              // Handle success (e.g., reset form or show success message)
+              console.log("Course added successfully!");
+              setCourseData({
+                  course_name: "",
+                  course_photo: "",
+                  tutor_name: "",
+                  tutor_email: "",
+                  tutor_contact: "",
+              });
+              setShowModal(false);
+              fetchCourseData();
           }
-          if(btn == "Save"){
-
-            const response = await fetch(`http://127.0.0.1:8000/AdminUrls/updateCourses/${courseData.id}/`, {
-              method: "PUT",
-              body: formData,
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${ token }`,
-              } 
-          });
-
-          if (!response.ok) {
-              throw new Error("Failed to submit form");
+  
+          if (btn === "Save") {
+              const response = await fetch(`http://127.0.0.1:8000/AdminUrls/updateCourses/${courseData.id}/`, {
+                  method: "PUT",
+                  body: formData,
+                  headers: {
+                      Authorization: `Bearer ${token}`,
+                  }
+              });
+  
+              if (!response.ok) {
+                  throw new Error("Failed to submit form");
+              }
+  
+              setCourseData({
+                  course_name: "",
+                  course_photo: "",
+                  tutor_name: "",
+                  tutor_email: "",
+                  tutor_contact: "",
+              });
+              console.log("Course saved successfully!");
+              setShowModal(false);
+              fetchCourseData();
           }
-          setCourseData({course_name: "",
-            course_photo: "",
-            tutor_name: "",
-            tutor_email: "",
-            tutor_contact: "",})
-          console.log("Course saved successfully!");
-          setShowModal(false)
-          }
-        } catch (error) {
-            console.log("Error:", error);
-        }
-    };
-
+      } catch (error) {
+          console.log("Error:", error);
+      }
+  };
+  
     const delCou = (id) => {
       setdeleteModal(true)
       setDeleteId(id)
@@ -180,23 +182,50 @@ function Courses() {
       }
     }
     
-    const handleSearch = (query) => {
-      const result = items.filter((item) =>
-        item.toLowerCase().includes(query.toLowerCase())
-      );
-      setFilteredItems(result);
-    };
 
 
+    useEffect(()=>{
+         SearchCourses()
+    },[serachTxt])
+    
+    const SearchCourses =async() => {
+
+      try{
+
+        const response=await fetch(`http://127.0.0.1:8000/AdminUrls/searchCourses?course_name=${serachTxt}`,{
+          method:"GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${ token }`,
+          }
+        })
+          const data=await response.json()
+          console.log(data)
+          setCourseDetails(data)
+
+       
+
+      }catch(e){
+        console.log(e)
+      }
+
+    }
 
 
     return (
         <div className='course-box'>
              
              <div className='d-flex justify-content-between align-items-center'>
-               <div><FaArrowLeft onClick={() => navigate('/admin_home')}/></div>
+
+              <div className='d-flex'>
+              <div className='me-3'><FaArrowLeft onClick={() => navigate('/admin_home')}/></div>
               <div><h4><u>COURSES:</u></h4></div>
-              <div>    
+
+              </div>
+               
+              <div> 
+
+                <input type="search" placeholder='search by course' value={serachTxt} onChange={(e) => setSearchTxt(e.target.value) } />   
             
               </div>
               <div><button onClick={() => setShowModal(true)} className='login-btn' style={{width:'110%'}}>ADD COURSE</button></div>
@@ -329,42 +358,3 @@ export default Courses;
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-// import React, { useState } from "react";
-// import SearchBar from "./SearchBar";
-
-// const items = ["React", "JavaScript", "Django", "Python", "C++", "HTML", "CSS"];
-
-// const App = () => {
-//   const [filteredItems, setFilteredItems] = useState(items);
-
-//   const handleSearch = (query) => {
-//     const result = items.filter((item) =>
-//       item.toLowerCase().includes(query.toLowerCase())
-//     );
-//     setFilteredItems(result);
-//   };
-
-//   return (
-//     <div style={{ padding: "20px" }}>
-//       <SearchBar onSearch={handleSearch} />
-//       <ul>
-//         {filteredItems.map((item, index) => (
-//           <li key={index}>{item}</li>
-//         ))}
-//       </ul>
-//     </div>
-//   );
-// };
-
-// export default App;

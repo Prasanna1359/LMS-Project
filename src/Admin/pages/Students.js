@@ -25,7 +25,7 @@ function Students() {
     const [deleteId, setDeleteId] = useState("");
     const [deleteModal, setDeleteModal] = useState(false);
     const token = localStorage.getItem("access_token");
-
+    const [serachTxt,setSearchTxt]=useState("")
     const changeHandler = (e) => {
         const { name, value } = e.target;
         if (name === "course_name") {
@@ -153,10 +153,7 @@ function Students() {
                         "Content-Type": "application/json",
                         Authorization: `Bearer ${token}`,
                     },
-                    body: JSON.stringify({
-                        ...studentData,
-                        course_name: studentData.course_name.map(courseId => ({ id: courseId }))
-                    })
+                    body:JSON.stringify(studentData)
                 });
 
                 setStudentData({
@@ -217,24 +214,66 @@ function Students() {
         }
     };
 
+
+
+
+     useEffect(()=>{
+             SearchStudent()
+        },[serachTxt])
+        
+        const SearchStudent =async() => {
+    
+          try{
+    
+            const response=await fetch(`http://127.0.0.1:8000/AdminUrls/SearchStudents?student_name=${serachTxt}`,{
+              method:"GET",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${ token }`,
+              }
+            })
+              const data=await response.json()
+              console.log(data)
+              setStudentDetails(data)
+    
+           
+    
+          }catch(e){
+            console.log(e)
+          }
+    
+        }
+    
+
+
+
     return (
         <div className='students'>
             <div className='d-flex justify-content-between align-items-center'>
-                <div><FaArrowLeft onClick={() => navigate('/admin_home')} /></div>
+                <div className='d-flex'>
+
+                <div className='me-3'><FaArrowLeft onClick={() => navigate('/admin_home')} /></div>
                 <div><h4><u>STUDENTS:</u></h4></div>
-                <div></div>
+
+
+                </div>
+                
+                <div>
+                <input type="search" placeholder='search by name' value={serachTxt} onChange={(e) => setSearchTxt(e.target.value) } />   
+             
+                </div>
                 <div><button onClick={() => setShowModal(true)} className='login-btn' style={{ width: '110%' }}>Add Student</button></div>
             </div>
 
             <table className="table table-hover">
                 <thead>
                     <tr>
-                        <th>Username</th>
-                        <th>Email</th>
-                        <th>Courses</th>
-                        <th>Joined Date</th>
-                        <th>End Date</th>
-                        <th>Actions</th>
+                        <th>NAME</th>
+                        <th>EMAIL</th>
+                        <th>COURSES</th>
+                        <th>JOINED DATE</th>
+                        <th>END DATE</th>
+                        <th>ACTION</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -242,7 +281,7 @@ function Students() {
                         <tr key={index}>
                             <td>{data.student_name}</td>
                             <td>{data.email}</td>
-                            <td>{data.course_name.join(',')}</td>
+                            <td>{data.course_display.join(', ')}</td>
                             <td>{data.joined_date}</td>
                             <td>{data.end_date}</td>
                             <td>

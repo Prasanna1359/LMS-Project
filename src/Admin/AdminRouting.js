@@ -12,6 +12,8 @@ import ViewCourse from "./pages/ViewCourse";
 import Students from "./pages/Students";
 import ShowVideo from "./pages/ShowVideo";
 import EnrolledStudents from "./pages/EnrolledStudents";
+import Dashboard from "./pages/Dashboard";
+import LogOut from "./pages/LogOut";
 // import StudentLogin from "../Student/pages/StudentLogin";
 
 function AdminRouting () {
@@ -20,6 +22,7 @@ function AdminRouting () {
         
            <Routes>
                <Route path="/" element={<AdminLogin/>}></Route>
+
                <Route path="AdminLogin/" element={<AdminLogin/>}></Route>
                <Route path="verify_otp/" element={<VerifyOTP/>}></Route>
                <Route path="Forgot_password/" element={<ForgotPassword/>}></Route>
@@ -28,8 +31,10 @@ function AdminRouting () {
                
 
                <Route path="admin_home/" element={<PageLayout />}>
+                    <Route index element={<Dashboard/>}></Route>
+
                     <Route path="AddAdmin/" element={<AddAdminPage/>}></Route>
-                    <Route path="courses/" element={<Courses />} ></Route>
+                    <Route  path="courses/" element={<Courses />} ></Route>
                     <Route path="students/" element={<Students/>}></Route>
                     
                     <Route path="addAdmin/" element={<AddAdminPage />}></Route>
@@ -39,6 +44,7 @@ function AdminRouting () {
 
 
                     <Route path="students/" element={<Students/>}></Route>
+                    <Route path="logout/" element={<LogOut/>}></Route>
 
 
                    

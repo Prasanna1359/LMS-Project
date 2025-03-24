@@ -354,15 +354,15 @@ class VideosSearchView(viewsets.ModelViewSet):
     queryset =Videos.objects.all()
     serializer_class=VideosSerializer
 
-    def get_queryset(self,request):
-        course_id = request.query_params.get('course_id')
+    def get_queryset(self):
+        course_id =self.request.query_params.get('course_id')
 
 
-        qs=Videos.objects.all()
+        qs=Videos.objects.filter(course=course_id)
         description=self.request.query_params.get('description')
 
         if description is not None:
-            qs=qs.filter(course=course_id,description__icontains=description)
+            qs=qs.filter(description__icontains=description)
         return qs
     
 
@@ -465,7 +465,9 @@ class updateStudentDataView(APIView):
     def put(self, request, id):
         try:
             student = StudentData.objects.get(id=id)
+
             data = request.data.copy()
+            email=student.email
 
             course_names = data.pop('course_name', [])
             if isinstance(course_names, str):  
@@ -488,18 +490,19 @@ class updateStudentDataView(APIView):
 
 
 
-                # enrolled_student = EnrollStudents.objects.filter(email=student.email).first()
-                # if enrolled_student:
-                #     data["email"] = custom_user.email
-                #     enrolled_serializer = EnrolledStudentsSerializer(enrolled_student, data=data, partial=True)
-                #     if enrolled_serializer.is_valid():
-                #         enrolled_student_updated = enrolled_serializer.save()
+                enrolled_student = EnrollStudents.objects.filter(email=email).first()
+                if enrolled_student:
+                    data["email"] = custom_user.email
+                    data["student_name"] = custom_user.username
+                    enrolled_serializer = EnrolledStudentsSerializer(enrolled_student, data=data, partial=True)
+                    if enrolled_serializer.is_valid():
+                        enrolled_student_updated = enrolled_serializer.save()
 
-                #         enrolled_student_updated.course_name.set(courses)
-                #     else:
-                #         return Response(enrolled_serializer.errors, status=400)
+                        enrolled_student_updated.course_name.set(courses)
+                    else:
+                        return Response(enrolled_serializer.errors, status=400)
 
-                #     return Response(enrolled_serializer.errors, status=400)
+                    # return Response(enrolled_serializer.errors, status=400)
                 
 
 

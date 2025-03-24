@@ -5,6 +5,7 @@ import '../css/AdminHome.css';
 import React, { useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import { Modal,ModalBody } from 'react-bootstrap';
+import profileLogo from "../../Student/pages/assests/profileLogo.jpg"
 const TopBar = ({ user }) => {
   
    const [showModal,setShowModal]=useState(false)
@@ -60,17 +61,13 @@ const TopBar = ({ user }) => {
 
 
 
-
-
-
-
       {showModal && (
         <div className='modal-overlay1'>
           <div className='modal-content1'>
 
                <h4 style={{color:"#ff416c"}}>PROFILE</h4>
 
-               <img src={`http://127.0.0.1:8000/${data.profile}`} alt="profile" style={{height:"50%",width:"50%"}} /> <br /> <br /> 
+               <img src={`http://127.0.0.1:8000/${data.profile}` || {profileLogo}} alt="profile" style={{height:"50%",width:"50%"}} /> <br /> <br /> 
                 <b>NAME:</b><p>{data.username}</p>
                 <b>EMAIL:</b><p>{data.email}</p>
 

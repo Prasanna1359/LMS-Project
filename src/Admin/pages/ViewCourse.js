@@ -6,6 +6,7 @@ import '../css/coursess.css';
 function ViewCourse() {
   const location = useLocation();
   const data = location.state?.course_data;
+  console.log(data.id,"data id")
   const token = localStorage.getItem("access_token");
   const [videoDetails, setVideoDetails] = useState({
     course: '',
@@ -166,8 +167,9 @@ function ViewCourse() {
         }
       );
 
-      const data = await response.json();
-      setVideoData(data);
+      const rdata = await response.json();
+      setVideoData(rdata);
+      console.log(rdata)
     } catch (e) {
       console.log(e);
     }

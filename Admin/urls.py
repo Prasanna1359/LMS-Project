@@ -33,6 +33,9 @@ urlpatterns=[
     
     path('searchprofile',SearchProfileView.as_view(),name='searchprofile'),
     path('searchCoursesData',SearchCoursesData.as_view(),name='searchCoursesData'),
+
+    path('profile/<str:email>/',StudentProfileView.as_view(),name='profile'),
+    path('retreiveEnrolledStudents/',retreiveEnrolledStudentsView.as_view(),name='retreiveEnrolledStudents'),
     
 
 

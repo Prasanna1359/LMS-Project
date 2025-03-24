@@ -117,128 +117,27 @@ class CourseSerializer(serializers.ModelSerializer):
         return CoursesData.objects.create(**validated_data)
     
 
-class TutorDataSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=TutorData
-        fields='__all__'   
+# class TutorDataSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model=TutorData
+#         fields='__all__'   
 
 class VideosSerializer(serializers.ModelSerializer):
     class Meta:
         model=Videos
         fields='__all__'
 
+class EnrolledStudentsSerializer(serializers.ModelSerializer):
+    course_name = serializers.ListField(child=serializers.CharField(), write_only=True)
+    course_display = serializers.SerializerMethodField()
 
-### class StudentSerializer(serializers.ModelSerializer):
-#     course_name = serializers.ListField(child=serializers.CharField(), write_only=True)
-
-#     class Meta:
-#         model = StudentData
-#         fields = ['id', 'student_name', 'email', 'course_name', 'password', 'joined_date', 'end_date']
-    
-#     def get_course_name(self, obj):
-#         course_names = [course.course_name for course in obj.course_name.all()]
-
-#         print(f"Course names for student {obj.student_name}: {course_names}")
-#         return course_names
-
-#     def create(self, validated_data):
-#         # Pop course_data from validated_data if it exists
-#         course_data = validated_data.pop('course_name', [])
-#         print(course_data, "courses data")
-#         plain_password = validated_data['password']
-#         email = validated_data['email']
-
-#         # Get or create the CustomUser instance
-#         user, created = CustomUser.objects.get_or_create(
-#             email=email,
-#             defaults={
-#                 "username": validated_data['student_name'],
-#                 "password": plain_password,
-#                 "panel": "student",
-#             }
-#         )
-
-#         # Create a StudentData instance using the user instance
-#         student = StudentData.objects.create(
-#             user=user,
-#             student_name=validated_data['student_name'],
-#             password=plain_password,
-#             email=email,
-#             joined_date=validated_data['joined_date'],
-#             end_date=validated_data['end_date']
-#         )
-
-#         # Set the course_name for the student
-#         if course_data:
-#             student.course_name.set(course_data)
-
-#         # Create an EnrollStudents instance
-#         enroll_student = EnrollStudents.objects.create(
-#             student_name=validated_data['student_name'],
-#             email=email,
-#             joined_date=validated_data['joined_date'],
-#             end_date=validated_data['end_date']
-#         )
-
-#         # Set the course_name for the enrollment
-#         if course_data:
-#             enroll_student.course_name.set(course_data)
-
-#         return student
+    class Meta:
+        model=EnrollStudents
+        fields = ['id', 'student_name', 'email', 'course_name', 'course_display', 'joined_date', 'end_date']
 
 
-# class StudentSerializer(serializers.ModelSerializer):
-#     course_name = serializers.ListField(child=serializers.CharField(), write_only=True)
-#     course_display = serializers.SerializerMethodField()
-
-#     class Meta:
-#         model = StudentData
-#         fields = ['id', 'student_name', 'email', 'course_name', 'course_display', 'password', 'joined_date', 'end_date']
-
-#     def get_course_display(self, obj):
-#         return [course.course_name for course in obj.course_name.all()]
-
-#     def create(self, validated_data):
-#         course_names = validated_data.pop('course_name', [])  # List of course names
-#         print(course_names, "Received Course Names")
-
-#         plain_password = validated_data['password']
-#         email = validated_data['email']
-
-#         user, created = CustomUser.objects.get_or_create(
-#             email=email,
-#             defaults={
-#                 "username": validated_data['student_name'],
-#                 "password": plain_password,
-#                 "panel": "student",
-#             }
-#         )
-
-#         student = StudentData.objects.create(
-#             user=user,
-#             student_name=validated_data['student_name'],
-#             password=plain_password,
-#             email=email,
-#             joined_date=validated_data['joined_date'],
-#             end_date=validated_data['end_date']
-#         )
-
-#         # Fetch course objects based on names
-#         courses = CoursesData.objects.filter(course_name__in=course_names)
-#         student.course_name.set(courses)
-
-#         enroll_student = EnrollStudents.objects.create(
-#             student_name=validated_data['student_name'],
-#             email=email,
-#             joined_date=validated_data['joined_date'],
-#             end_date=validated_data['end_date']
-#         )
-
-#         enroll_student.course_name.set(courses)
-
-#         return student
-
-
+    def get_course_display(self, obj):
+        return [course.course_name for course in obj.course_name.all()]
 
 
 class StudentSerializer(serializers.ModelSerializer):
@@ -265,6 +164,7 @@ class StudentSerializer(serializers.ModelSerializer):
                 "username": validated_data['student_name'],
                 "password": plain_password,
                 "panel": "student",
+                
             }
         )
 
@@ -274,10 +174,10 @@ class StudentSerializer(serializers.ModelSerializer):
             password=plain_password,
             email=email,
             joined_date=validated_data['joined_date'],
-            end_date=validated_data['end_date']
+            end_date=validated_data['end_date'],
+            
         )
 
-        # Convert course names to course objects
         courses = CoursesData.objects.filter(course_name__in=course_names)
         student.course_name.set(courses)
 

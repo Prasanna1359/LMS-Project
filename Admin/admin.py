@@ -36,11 +36,6 @@ class Courses(admin.ModelAdmin):
 admin.site.register(CoursesData,Courses)
 
 
-# class Tutors(admin.ModelAdmin):
-#     model=TutorData
-#     list_display=['id','tutor_name','tutor_email','tutor_contact']
-
-# admin.site.register(TutorData,Tutors)
 
 class videos(admin.ModelAdmin):
     model=Videos

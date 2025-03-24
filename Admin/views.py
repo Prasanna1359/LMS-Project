@@ -170,6 +170,11 @@ class AddCourseView(APIView):
 
     def post(self, request):
         course_name = request.data.get('course_name')
+        photo=request.data.get('course_photo')
+        tutor_name=request.data.get('tutor_name')
+        tutor_email=request.data.get('tutor_email')
+        tutor_contact=request.data.get('tutor_contact')
+
 
         if not course_name:
             return Response({"message": "Course name is required"}, status=400)
@@ -179,7 +184,7 @@ class AddCourseView(APIView):
             return Response({"message": "Course with this name already exists"}, status=400)
 
         # Create the new course
-        course = CoursesData.objects.create(course_name=course_name)
+        course = CoursesData.objects.create(course_name=course_name,course_photo=photo,tutor_name=tutor_name,tutor_email=tutor_email,tutor_contact=tutor_contact)
         return Response({"message": "Course created successfully", "course_id": course.id}, status=201)
     
 
@@ -345,15 +350,19 @@ class VideosSearchView(viewsets.ModelViewSet):
 
     permission_classes=[IsAuthenticated]
 
+
     queryset =Videos.objects.all()
     serializer_class=VideosSerializer
 
-    def get_queryset(self):
+    def get_queryset(self,request):
+        course_id = request.query_params.get('course_id')
+
+
         qs=Videos.objects.all()
         description=self.request.query_params.get('description')
 
         if description is not None:
-            qs=qs.filter(description__icontains=description)
+            qs=qs.filter(course=course_id,description__icontains=description)
         return qs
     
 
@@ -458,18 +467,41 @@ class updateStudentDataView(APIView):
             student = StudentData.objects.get(id=id)
             data = request.data.copy()
 
-            # Extract course names from request
             course_names = data.pop('course_name', [])
             if isinstance(course_names, str):  
-                course_names = [course_names]  # Ensure it's always a list
+                course_names = [course_names]  
 
             serializer = StudentSerializer(student, data=data, partial=True)
             if serializer.is_valid():
                 updated_student = serializer.save()
 
-                # Convert course names to actual course objects and update the relationship
                 courses = CoursesData.objects.filter(course_name__in=course_names)
                 updated_student.course_name.set(courses)
+
+
+                custom_user = student.user 
+                if "student_name" in data:
+                    custom_user.username = data["student_name"]
+                if "email" in data:
+                    custom_user.email = data["email"]
+                custom_user.save() 
+
+
+
+                # enrolled_student = EnrollStudents.objects.filter(email=student.email).first()
+                # if enrolled_student:
+                #     data["email"] = custom_user.email
+                #     enrolled_serializer = EnrolledStudentsSerializer(enrolled_student, data=data, partial=True)
+                #     if enrolled_serializer.is_valid():
+                #         enrolled_student_updated = enrolled_serializer.save()
+
+                #         enrolled_student_updated.course_name.set(courses)
+                #     else:
+                #         return Response(enrolled_serializer.errors, status=400)
+
+                #     return Response(enrolled_serializer.errors, status=400)
+                
+
 
                 return Response(serializer.data, status=200)
             return Response(serializer.errors, status=400)
@@ -479,6 +511,8 @@ class updateStudentDataView(APIView):
         except Exception as e:
             return Response({"detail": str(e)}, status=400)
 
+
+
 class deleteStudentView(APIView):
     permission_classes=[IsAuthenticated]
 
@@ -486,8 +520,13 @@ class deleteStudentView(APIView):
         print("deletingggg")
         try:
             id = kwargs.get('id')  # Fetching the id from kwargs
-            course = StudentData.objects.get(id=id)
-            course.delete()
+            student = StudentData.objects.get(id=id)
+            user=CustomUser.objects.get(email=student.email)
+
+            student.delete()
+            user.delete()
+
+
             return Response(status=204)
         except StudentData.DoesNotExist:
             return Response(status=404)
@@ -496,3 +535,21 @@ class deleteStudentView(APIView):
 
 
 
+class StudentProfileView(APIView):
+    permission_classes=[IsAuthenticated]
+
+    def get(self, request, email, *args, **kwargs):
+        user = get_object_or_404(StudentData, email=email)  
+        serializer = StudentSerializer(user)  # Serialize the data
+        return Response(serializer.data,status=200) 
+       
+
+
+class retreiveEnrolledStudentsView(APIView):
+    permission_classes=[IsAuthenticated]
+
+    def get(self,request):
+        data=EnrollStudents.objects.all()
+        serializer=EnrolledStudentsSerializer(data,many=True)
+        print(serializer.data)
+        return Response(serializer.data,status=200)

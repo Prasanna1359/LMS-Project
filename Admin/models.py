@@ -52,16 +52,6 @@ class CoursesData(models.Model):
         return self.course_name
 
 
-class TutorData(models.Model):
-
-    tutor_name=models.CharField(max_length=100)
-    tutor_email=models.EmailField()
-    tutor_contact=models.CharField(max_length=10)
-
-    def _str_(self):
-        return self.tutor_email
-    
-
 class Videos(models.Model):
 
     course=models.ForeignKey(CoursesData,on_delete=models.CASCADE)
@@ -80,6 +70,7 @@ class StudentData(models.Model):
     course_name=models.ManyToManyField(CoursesData)
     joined_date=models.DateField()
     end_date=models.DateField()
+    # profile=models.ImageField(upload_to='uploads/', default="default_profile")
 
     def __str__(self):
         return self.student_name

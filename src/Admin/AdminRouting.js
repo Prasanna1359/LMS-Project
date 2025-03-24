@@ -14,12 +14,15 @@ import ShowVideo from "./pages/ShowVideo";
 import EnrolledStudents from "./pages/EnrolledStudents";
 import Dashboard from "./pages/Dashboard";
 import LogOut from "./pages/LogOut";
+import { AuthProvider } from "../Student/AuthContext";
+import PrivateRoute from "../Student/PrivateRoute";
 // import StudentLogin from "../Student/pages/StudentLogin";
+
 
 function AdminRouting () {
   return (
     <div>
-        
+        <AuthProvider>
            <Routes>
                <Route path="/" element={<AdminLogin/>}></Route>
 
@@ -29,8 +32,9 @@ function AdminRouting () {
                <Route path="reset-password/" element={<ResetPassword/>}></Route>
                {/* <Route path="StudentLogin/" element={<StudentLogin/>}></Route> */}
                
+               
 
-               <Route path="admin_home/" element={<PageLayout />}>
+               <Route path="admin_home/" element={<PrivateRoute> <PageLayout /> </PrivateRoute>}>
                     <Route index element={<Dashboard/>}></Route>
 
                     <Route path="AddAdmin/" element={<AddAdminPage/>}></Route>
@@ -50,8 +54,11 @@ function AdminRouting () {
                    
 
                </Route>
+               {/* </PrivateRoute> */}
 
            </Routes>
+
+           </AuthProvider>
         
     </div>
   )

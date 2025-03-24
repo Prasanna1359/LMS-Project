@@ -17,8 +17,8 @@ const StudentSideBar = () => {
          </div>
          <div className='buttons'>
             
-           <div className='navigator'> <button><Link className="nav-link active" aria-current="page" to="./courses">
-              <span data-feather="home"></span>
+           <div className='navigator'> <button><Link className="nav-link active" aria-current="page" to="./profile">
+              <span data-feather="profile"></span>
               Profile
             </Link></button></div>
            <div className='navigator'> <button><Link className="nav-link" to="./StudentCourses">
@@ -34,8 +34,8 @@ const StudentSideBar = () => {
               Add Admin
             </Link></button></div> */}
 
-            <div className='navigator'>  <button><Link className="nav-link" to="/">
-              <span data-feather="/"></span>
+            <div className='navigator'>  <button><Link className="nav-link" to="./logout">
+              <span data-feather="logout"></span>
               Logout
             </Link></button></div>
  

@@ -18,13 +18,14 @@ const AdminLogin = () => {
         const navigate=useNavigate()
        
         const [id,setId]=useState("")
-       
+        const [loading, setLoading] = useState(false);
         
         const [error,setError]=useState("")
   const handleSubmit = async (e) => {
     e.preventDefault();
     
           console.log("logging")
+          setLoading(true)
           
           try{
             console.log("logging")
@@ -42,6 +43,9 @@ const AdminLogin = () => {
               console.error("An unexpected error occurred:", error);
               alert("An error occurred. Please try again later.");
             }
+          }
+          finally{
+            setLoading(false);  
           }
   };
 
@@ -74,9 +78,17 @@ const AdminLogin = () => {
             />
           </div>
           <p><a href="Forgot_password/">Forgot Password?</a></p>
-          <button type="submit" className="login-btn">
+          {/* <button type="submit" className="login-btn">
             GET OTP
+          </button> */}
+
+          <button type="submit" className='login-btn' disabled={loading}>
+            {loading ? "Signing in..." : "Sign in"}
           </button>
+
+          {loading && <div className="loader"></div>} 
+  
+
            <p style={{color:'red'}}>
            {error.non_field_errors && (
     <div className="error">

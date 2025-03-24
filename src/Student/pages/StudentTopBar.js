@@ -6,9 +6,10 @@ import 'react-bootstrap';
 import '../../Admin/css/AdminHome.css'
 import React from 'react';
 import { FaUserCircle } from 'react-icons/fa';
-
+import { useNavigate } from 'react-router-dom';
 
 const StudentTopBar = ({ user }) => {
+  const navigate=useNavigate()
   console.log(user);
   return (
     <nav className="navbar navbar-expand-md fixed-top w-100 nav-bar">
@@ -17,7 +18,7 @@ const StudentTopBar = ({ user }) => {
               <h2>LMS</h2>
             </div>
             <div className="me-5 d-flex profile">
-              <div className="me-2">
+              <div className="me-2" onClick={() => navigate('./profile')}>
                 <FaUserCircle />
               </div>
               <div>

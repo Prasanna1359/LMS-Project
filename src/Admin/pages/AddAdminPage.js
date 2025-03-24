@@ -134,7 +134,7 @@ function AddAdminPage ()  {
                 <input type="search" placeholder='search by name' value={serachTxt} onChange={(e) => setSearchTxt(e.target.value) } />   
                
                 </div>
-                <div >  <button onClick={() => setShowModal(true)} className='login-btn ' >ADD ADMIN</button></div>
+                <div >  <button onClick={() => setShowModal(true)} className='login-btn' style={{width:"150px"}} >ADD ADMIN</button></div>
             </div>
                      
 

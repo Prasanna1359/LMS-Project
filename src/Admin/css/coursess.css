@@ -46,8 +46,8 @@
     border-radius: 10px;
   }
 
-  .inputField select{
-    width: 90%;
+  .inputField Select{
+    width: 80%;
   }
   
   .inputField button {
@@ -152,4 +152,11 @@
   margin: 1%;
   border-radius: 5px;
 
+}
+
+.basic-multi-select {
+  width: 90%;
+  font-size: 16px;
+  margin-left: 5%;
+ border: 2px solid black;
 }

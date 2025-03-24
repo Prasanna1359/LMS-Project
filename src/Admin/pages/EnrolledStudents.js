@@ -21,7 +21,7 @@ function EnrolledStudents () {
             }
 
             try {
-                const response = await fetch("http://127.0.0.1:8000/AdminUrls/retreiveStudents/", {
+                const response = await fetch("http://127.0.0.1:8000/AdminUrls/retreiveEnrolledStudents/", {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -74,7 +74,7 @@ function EnrolledStudents () {
                                     <td>{data.email}</td>
                                     <td>{data.course_display.join(', ')}</td>
 
-                                    {/* <td>{Array.isArray(data.course_name.join) ? data.course_name.join.join(", ") : data.course_name}</td> */}
+                                    {/* <td>{Array.isArray(data.course_display.join) ? data.course_display.join.join(", ") : data.course_display}</td> */}
 
                                     <td>{data.joined_date}</td>
                                     <td>{data.end_date}</td>

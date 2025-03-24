@@ -11,10 +11,12 @@ function ForgotPassword  () {
     const [message,setMessage]=useState("")
 
     const [error,setError]=useState("")
+     const [loading, setLoading] = useState(false);
     
     const navigate=useNavigate()
     const submitHandler = async(e) => {
         e.preventDefault();
+        setLoading(true)
 
          try{
             const response=await axios.post("http://127.0.0.1:8000/AdminUrls/VerifyEmail/",{"email":email})
@@ -30,6 +32,9 @@ function ForgotPassword  () {
          }catch(error){
             console.log(error)
          }
+         finally{
+          setLoading(false);  
+        }
     }
 
   return (
@@ -40,7 +45,15 @@ function ForgotPassword  () {
         <form onSubmit={submitHandler}>
           <h2>Enter Email</h2>
             <div className='input-box'><FaEnvelope className="icon" /><input type="email" name='email' value={email} placeholder='Email' required onChange={(e) => setEmail(e.target.value)}/></div>
-            <div><button type='submit' className='login-btn' >GET OTP</button></div>
+            <div>
+
+            <button type="submit" className='login-btn' disabled={loading}>
+            {loading ? "Sending..." : "Get OTP"}
+          </button>
+
+          {loading && <div className="loader"></div>} 
+          </div>
+
         </form>
         </div>
     </div>

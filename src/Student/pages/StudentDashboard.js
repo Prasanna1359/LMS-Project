@@ -1,9 +1,10 @@
 import React, {useState,useEffect}from 'react'
-import learn from "./assests/learn.jpg"
-import "../css/AdminDashboard.css"
+import learn from "../../Admin/pages/assests/learn.jpg"
+import "../../Admin/css/AdminDashboard.css"
+// ../../Admin/css/AdminHome.css
 import { useNavigate } from 'react-router-dom'
 
-function Dashboard  ()  {
+function StudentDashboard  ()  {
   const navigate=useNavigate()
    const [courseDetails, setCourseDetails] = useState([]);
    const token=localStorage.getItem("access_token")
@@ -65,25 +66,25 @@ function Dashboard  ()  {
     <h1 className="txt">Welcome to LMS Project !!!</h1>
 
     {/* Image with Overlay Text */}
-    {/* <div className="image-container">
+    <div className="image-container">
       <img src={learn} alt="Learn" className="background-image" />
       <div className="overlay-text">Start Learning from Today</div>
-    </div> */}
+    </div>
 
-    {/* Statistics Boxes */}
-    <div className="stats-container">
+    {/* Statistics Boxes  */}
+    {/* <div className="stats-container">
       <div className="stat-box" onClick={() => navigate("./courses")}>
         <h4>Total Courses</h4>
-        <p>{courseDetails.length}</p> {/* Replace with dynamic count */}
+        <p>{courseDetails.length}</p> 
       </div>
 
       <div className="stat-box" onClick={() => navigate("./students")}>
         <h4>Total Students</h4>
-        <p>{studentDetails.length}</p> {/* Replace with dynamic count */}
-      </div>
-    </div>
-  </div>
+        <p>{studentDetails.length}</p>
+       </div>
+     </div> */}
+   </div>
   )
 }
 
-export default Dashboard
+export default StudentDashboard

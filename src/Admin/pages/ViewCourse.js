@@ -51,6 +51,7 @@ function ViewCourse() {
 
       const result = await response.json();
       setVideoData(result || []);
+      console.log(result)
     } catch (error) {
       console.log(error);
     }
@@ -127,6 +128,7 @@ function ViewCourse() {
           },
         }
       );
+      fetchData();
 
       if (response.ok) {
         alert('Video deleted successfully!');
@@ -138,6 +140,7 @@ function ViewCourse() {
     } catch (error) {
       console.log(error);
     }
+    
   };
 
   const editVideo = (data) => {
@@ -153,7 +156,7 @@ function ViewCourse() {
   const SearchCourses = async () => {
     try {
       const response = await fetch(
-        `http://127.0.0.1:8000/AdminUrls/searchDescription?description=${serachTxt}`,
+        `http://127.0.0.1:8000/AdminUrls/searchDescription?course_id=${data.id}&description=${serachTxt}`,
         {
           method: "GET",
           headers: {
@@ -200,7 +203,9 @@ function ViewCourse() {
         </button>
       </div>
 
-      <table className='table table-hover'>
+      
+
+      {/* <table className='table table-hover'>
         <thead>
           <tr>
             <th>ID</th>
@@ -229,7 +234,46 @@ function ViewCourse() {
             </tr>
           ))}
         </tbody>
-      </table>
+      </table> */}
+
+<table className="table table-hover">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>TOPIC</th>
+      <th>UPLOADED AT</th>
+      <th>ACTION</th>
+    </tr>
+  </thead>
+  <tbody>
+    {videoData.length > 0 ? (
+      videoData.map((video, index) => (
+        <tr key={index}>
+          <td>{index + 1}</td>
+          <td>{video.description}</td>
+          <td>{video.uploaded_at}</td>
+          <td>
+            <span className="action" onClick={() => showvideo(video)}>
+              <FaEye />
+            </span>
+            <span className="action" onClick={() => editVideo(video)}>
+              <FaPen />
+            </span>
+            <span className="action" onClick={() => delModal(video.id)}>
+              <FaTrash />
+            </span>
+          </td>
+        </tr>
+      ))
+    ) : (
+      <tr>
+        <td colSpan="4" style={{ textAlign: "center" }}>
+          No data found
+        </td>
+      </tr>
+    )}
+  </tbody>
+</table>
 
       {showModal && (
         <div className='modal-overlay'>

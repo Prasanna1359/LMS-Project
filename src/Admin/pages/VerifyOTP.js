@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { Container, Form, Button, Row, Col, Toast, ToastContainer } from "react-bootstrap";
 import { useNavigate, useLocation } from "react-router-dom";
 import "../css/LoginCSS.css"
-
+import { useAuth } from "../../Student/AuthContext";
 
 
 const VerifyOTP = () => {
@@ -13,12 +13,29 @@ const VerifyOTP = () => {
     const [showToast, setShowToast] = useState(false);
     const [toastMessage, setToastMessage] = useState("");
     const [toastVariant, setToastVariant] = useState("success");
+    const [loading, setLoading] = useState(false);
+    
     const inputsRef = useRef([]);
     const navigate = useNavigate();
     const location = useLocation();
     
     const loggedUserId = location.state?.id;
     const action=location.state?.action
+
+
+    const { login } = useAuth();
+  
+
+  const handleLogin = (data) => {
+    const fakeToken = data.access; // Normally, this comes from an API
+    login(fakeToken);
+    if(data.panel === "admin"){
+        navigate('/admin_home', { state: { user: data } });
+    }
+    else{
+        navigate('/student-home', { state: { user: data } });
+    }
+  };
 
     useEffect(() => {
         let timer;
@@ -65,6 +82,7 @@ const VerifyOTP = () => {
     const handleSubmit = async (event) => {
     
         event.preventDefault();
+        setLoading(true)
         const enteredOtp = otp.join("");
         if(action === "login"){
             try {
@@ -80,23 +98,27 @@ const VerifyOTP = () => {
                 }
                 console.log("data",data)
                 localStorage.setItem("access_token", data.access);
+                handleLogin(data)
                 showToastMessage("OTP Verified Successfully!", "success");
-                if(data.panel === "admin"){
-                    navigate('/admin_home', { state: { user: data } });
+                // if(data.panel === "admin"){
+                //     navigate('/admin_home', { state: { user: data } });
 
-                }
+                // }
 
-                else{
-                    navigate('/student-home', { state: { user: data } });
-                }
+                // else{
+                //     navigate('/student-home', { state: { user: data } });
+                // }
                 // navigate('/admin_home', { state: { user: data } });
     
             } catch (error) {
                 showToastMessage(error.message, "danger");
+            }finally{
+                setLoading(false)
             }
 
         }
         if(action === "forgot-password"){
+
 
             try {
                 const response = await fetch("http://127.0.0.1:8000/AdminUrls/verify_fp_otp/", {
@@ -117,6 +139,8 @@ const VerifyOTP = () => {
     
             } catch (error) {
                 showToastMessage(error.message, "danger");
+            }finally{
+                setLoading(false)
             }
 
         }
@@ -144,6 +168,18 @@ const VerifyOTP = () => {
         }
     };
 
+    const handleKeyDown =(index,e)=>{
+        if(e.key === "Backspace"){
+            if(!otp[index] && index >0){
+                inputsRef.current[index-1].focus();
+            }
+            const newOtp=[...otp]
+            newOtp[index]="";
+            setOtp(newOtp);
+        }
+
+    }
+
     return (
        
                     <div className="login-container">
@@ -161,15 +197,24 @@ const VerifyOTP = () => {
                                     maxLength="1"
                                     value={digit}
                                     onChange={(e) => handleChange(index, e.target.value)}
+                                    onKeyDown={(e) => handleKeyDown(index,e)}
                                     onPaste={handlePaste}
                                     className="text-center otp-box"
                                     style={{ width:"40px", height: "40px", fontSize: "15px",margin:'1%'  }}
                                 />
                             ))}
                         </div>
-                        <Button type="submit" className="button" style={{background:'#ff416c',margin:'1%'}}>
+                        {/* <Button type="submit" className="button" style={{background:'#ff416c',margin:'1%'}}>
                             Verify OTP
-                        </Button>
+                        </Button> */}
+
+                        <button type="submit" className='login-btn ' disabled={loading}>
+                        {loading ? "Verifying..." : "Verify OTP"}
+                         </button>
+
+                        {loading && <div className="loader"></div>} 
+  
+
                     </Form>
 
                     <div className="mt-4">
@@ -194,15 +239,7 @@ const VerifyOTP = () => {
                
            
 
-            
-        //     <ToastContainer position="top-end" className="p-3">
-        //         <Toast onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide bg={toastVariant}>
-        //             <Toast.Body className="text-white">{toastMessage}</Toast.Body>
-        //         </Toast>
-        //     </ToastContainer>
-        //     </Col>
-        //     </Row>
-        // </Container>
+     
     );
 };
 

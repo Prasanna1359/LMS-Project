@@ -1,5 +1,5 @@
 import React,{useState} from 'react'
-import '../css/coursess.css';
+import '../../Admin/css/coursess.css';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../Student/AuthContext';
 
@@ -10,30 +10,23 @@ const LogOut = () => {
        const { logout } = useAuth();
        
     
-    //    const email=localStorage.getItem("email")
+    
 
     const handleLogout = () => {
-        // Clear authentication token (if stored in localStorage/sessionStorage)
-        // localStorage.removeItem("access_token");
-        // localStorage.removeItem("refresh_token");
-        // localStorage.removeItem("csrf_token");
-        // localStorage.removeItem("")
+        
         logout();
-        navigate("/AdminLogin"); // Redirect to login page
+        navigate("/AdminLogin"); 
       };
 
       const cancleLogout =() =>{
         setShowModal(false)
-        navigate("/admin_home")
+        navigate("/student-home")
       }
 
 
       
     
-      // const handleLogout = () => {
-       
-      //   navigate("/login");
-      // };
+     
     
   return (
     <div>

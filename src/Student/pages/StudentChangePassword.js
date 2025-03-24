@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import 'react-bootstrap';
 import { FaLock} from 'react-icons/fa';
+import "../css/studentChangePassword.css"
+import { FaArrowLeft } from 'react-icons/fa'
 
 function StudentChangePassword ()  {
 
@@ -54,7 +56,8 @@ function StudentChangePassword ()  {
   return (
     <div>
         
-        <div className=''>
+        <div className='container-box'>
+        <div className='me-3 arrow'><FaArrowLeft onClick={() => navigate('/student-home')} /></div>
         
                 <div className='login-box'>
                     <form onSubmit={submitHandler}>

@@ -16,6 +16,7 @@ const StudentLogin = () => {
         }
         
         const navigate=useNavigate()
+        const [loading, setLoading] = useState(false);
        
         const [id,setId]=useState("")
        
@@ -23,6 +24,7 @@ const StudentLogin = () => {
         const [error,setError]=useState("")
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true)
     
           console.log("logging")
           
@@ -42,6 +44,8 @@ const StudentLogin = () => {
               console.error("An unexpected error occurred:", error);
               alert("An error occurred. Please try again later.");
             }
+          }finally{
+            setLoading(false)
           }
   };
 
@@ -74,9 +78,14 @@ const StudentLogin = () => {
             />
           </div>
           <p><a href="Forgot_password/">Forgot Password?</a></p>
-          <button type="submit" className="login-btn">
-            GET OTP
+          <button type="submit" className='login-btn' disabled={loading}>
+            {loading ? "Signing in..." : "Sign in"}
           </button>
+
+          {loading && <div className="loader"></div>} 
+  
+
+
            <p style={{color:'red'}}>
            {error.non_field_errors && (
     <div className="error">

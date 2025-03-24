@@ -3,6 +3,7 @@ import { FaPen, FaTrash, FaArrowLeft } from 'react-icons/fa';
 import "../css/coursess.css";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import Select from "react-select";
 
 function Students() {
     const [studentData, setStudentData] = useState({
@@ -11,7 +12,8 @@ function Students() {
         "course_name": [],
         "password": "",
         "joined_date": "",
-        "end_date": ""
+        "end_date": "",
+        
     });
     console.log(studentData, "student data");
     const navigate = useNavigate();
@@ -19,13 +21,15 @@ function Students() {
     console.log(studentDetails,"studentDetails")
     const [error, setError] = useState("");
     const [showModal, setShowModal] = useState(false);
-    const [courses, setCourses] = useState([]);
+    
     const [btn, setBtn] = useState("Add Student");
     const [updateId, setUpdateId] = useState("");
     const [deleteId, setDeleteId] = useState("");
     const [deleteModal, setDeleteModal] = useState(false);
     const token = localStorage.getItem("access_token");
     const [serachTxt,setSearchTxt]=useState("")
+    const [courses, setCourses] = useState([]);
+
     const changeHandler = (e) => {
         const { name, value } = e.target;
         if (name === "course_name") {
@@ -80,13 +84,17 @@ function Students() {
                 },
             });
             const data = await response.json();
-            setCourses(data);
+            setCourses(Array.isArray(data) ? data : []);
         } catch (error) {
             console.log(error);
+            setCourses([]);  // Ensure courses is never undefined
             setError("Failed to fetch courses");
         }
     };
 
+
+
+  
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -106,33 +114,32 @@ function Students() {
                 formData.append('password', studentData.password);
                 formData.append('confirm_password', studentData.password);
                 formData.append('panel', "student");
+                
 
-                try {
-                    const response = await axios.post("http://127.0.0.1:8000/AdminUrls/AdminRegister/", formData, {
+
+                     try {
+                        const response = await axios.post("http://127.0.0.1:8000/AdminUrls/AdminRegister/", formData, {
+                            headers: {
+                                // 'Content-Type': 'multipart/form-data',
+                                Authorization: `Bearer ${token}`,
+                            },
+                        });
+                        console.log(response);
+                    } catch (error) {
+                        console.log(error);
+                    }
+
+                    const response = await fetch("http://127.0.0.1:8000/AdminUrls/student-data/", {
+                        method: "POST",
                         headers: {
-                            'Content-Type': 'multipart/form-data',
+                            "Content-Type": "application/json",
                             Authorization: `Bearer ${token}`,
                         },
+                        body: JSON.stringify(studentData),
                     });
-                    console.log(response);
-                } catch (error) {
-                    console.log(error);
-                }
-                console.log(studentData,"edfghiuytrewsdcfvgbnjm")
-                const response = await fetch("http://127.0.0.1:8000/AdminUrls/student-data/", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                    body:JSON.stringify(studentData)
-                    // body: JSON.stringify({
-                    //     ...studentData,
-                    //     course_name: studentData.course_name.map(course_name => course_name)
-                    // })
-                });
-                // courseId => ({ id: courseId })
-
+        
+                    
+            
                 setStudentData({
                     "student_name": "",
                     "email": "",
@@ -156,14 +163,17 @@ function Students() {
                     body:JSON.stringify(studentData)
                 });
 
+                
                 setStudentData({
                     "student_name": "",
                     "email": "",
                     "course_name": [],
                     "password": "",
                     "joined_date": "",
-                    "end_date": ""
+                    "end_date": "",
+                    
                 });
+                setBtn("Add Student")
 
                 if (!response.ok) {
                     throw new Error("Failed to update student");
@@ -209,6 +219,7 @@ function Students() {
             });
             console.log(response.data);
             setDeleteModal(false);
+            fetchStudentData();
         } catch (error) {
             console.log(error);
         }
@@ -242,6 +253,21 @@ function Students() {
             console.log(e)
           }
     
+        }
+
+        const closeEditModal=() =>{
+            setShowModal(false);
+            setStudentData({
+                "student_name": "",
+                "email": "",
+                "course_name": [],
+                "password": "",
+                "joined_date": "",
+                "end_date": "",
+                
+            });
+            setBtn("Add Student")
+
         }
     
 
@@ -297,7 +323,7 @@ function Students() {
                 <div className="modal-overlay">
                     <div className="modal-content">
                         <h2>Enter Student Details</h2>
-                        <form onSubmit={handleSubmit}>
+                        <form onSubmit={handleSubmit} enctype="multipart/form-data">
                             <div className='inputField'>
                                 <input
                                     type="text"
@@ -331,21 +357,31 @@ function Students() {
                                 />
                             </div>
 
-                            <div className='inputField' style={{ width: '100%' }}>
-                                <select
-                                    name="course_name"
-                                    multiple
-                                    value={studentData.course_name}
-                                    onChange={changeHandler}
-                                    required
-                                >
-                                    {courses.map((course) => (
-                                        <option key={course.id} value={course.course_name}>
-                                            {course.course_name}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
+                            
+
+<div className='inputField'>
+<Select
+  isMulti
+  name="course_name"
+  options={courses ? courses.map((course) => ({
+    value: course.course_name,
+    label: course.course_name,
+  })) : []}
+  className="basic-multi-select"
+  classNamePrefix="select"
+  value={studentData.course_name ? studentData.course_name.map((course) => ({
+    value: course,
+    label: course,
+  })) : []}
+  onChange={(selectedOptions) => {
+    setStudentData({
+      ...studentData,
+      course_name: selectedOptions ? selectedOptions.map((option) => option.value) : [],
+    });
+  }}
+/>
+
+</div>
 
                             <div className='inputField'>
                                 <input
@@ -369,9 +405,19 @@ function Students() {
                                 />
                             </div>
 
+                {/* <div className='inputField'>
+                <input
+                    type="file"
+                    name="profile"
+                    accept="image/*"
+                    onChange={(e) => setStudentData({ ...studentData, profile: e.target.files[0] })}
+                />
+
+              </div> */}
+
                             <div className='inputField'>
                                 <button type="submit">{btn}</button>
-                                <button type="button" onClick={() => setShowModal(false)}>CANCEL</button>
+                                <button type="button" onClick={closeEditModal}>CANCEL</button>
                             </div>
 
                             <p>{error}</p>

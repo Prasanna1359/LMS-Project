@@ -31,6 +31,7 @@ function Courses() {
           tutor_name: "",
           tutor_email: "",
           tutor_contact: "",})
+        setBtn("Add Course")
     }
     const [deleteModal,setdeleteModal]=useState(false)
     // const [data,setData]=useState([])
@@ -149,6 +150,7 @@ function Courses() {
               console.log("Course saved successfully!");
               setShowModal(false);
               fetchCourseData();
+              setBtn("Add Course")
           }
       } catch (error) {
           console.log("Error:", error);
